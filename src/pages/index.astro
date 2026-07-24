@@ -1,0 +1,26 @@
+---
+import EmiCalculator from '../components/EmiCalculator.svelte';
+import '../styles/global.css';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+		
+		<!-- SEO Meta Tags -->
+		<title>Substitution Chitty & Loan EMI Calculator - Premium Glassmorphic Dashboard</title>
+		<meta name="description" content="Calculate your monthly loan EMIs or analyze Chit Fund (Chitty) substitution yield and compound interest IRR with precision. Clean, modern glassmorphic dashboard with rich responsive visuals." />
+		<meta name="keywords" content="EMI Calculator, Chit Fund, Chitty, Substitution Chitty, loan calculator, glassmorphism, responsive calculator, Svelte 5, Astro" />
+		
+		<!-- Google Fonts & Material Icons -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+	</head>
+	<body class="bg-background text-on-surface transition-colors duration-500">
+		<EmiCalculator client:load />
+	</body>
+</html>
