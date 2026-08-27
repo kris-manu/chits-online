@@ -12,13 +12,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^14.2.5",
     "@astrojs/svelte": "^8.1.2",
     "@tailwindcss/vite": "^4.3.1",
     "astro": "^7.2.8",
     "svelte": "^5.56.3",
     "tailwindcss": "^4.3.1",
-    "typescript": "^6.0.3",
-    "wrangler": "^4.127.0"
+    "typescript": "^6.0.3"
   }
 }
