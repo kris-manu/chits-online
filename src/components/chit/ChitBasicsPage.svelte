@@ -513,6 +513,127 @@
         </div>
       </section>
 
+      <!-- INFOGRAPHIC: EARLY vs LATE BIDDER STRATEGY -->
+      <section class="space-y-6">
+        <div class="text-center space-y-2">
+          <h2 class="font-headline-md text-2xl lg:text-3xl font-bold text-primary tracking-tight">
+            {language === 'ml' ? 'എപ്പോൾ ലേലം ചെയ്യണം?' : 'When Should You Bid?'}
+          </h2>
+          <p class="text-on-surface-variant text-xs md:text-sm font-semibold">
+            {language === 'ml' ? 'ആദ്യ മാസം ലേലം ചെയ്യുന്നതും അവസാനം വരെ ക്ഷമ കാണിക്കുന്നതും – ഒരു താരതമ്യം' : 'Comparing early bidder vs patient subscriber — the core substitution trade-off'}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 lg:p-10 border border-outline-variant/30 space-y-7">
+
+          <!-- Legend -->
+          <div class="flex flex-wrap items-center gap-5 justify-center text-[10px] font-bold text-on-surface-variant">
+            <div class="flex items-center gap-1.5">
+              <div class="w-3.5 h-3 rounded-sm bg-error/65 shrink-0"></div>
+              <span>{language === 'ml' ? 'ഡിസ്കൗണ്ട് ചെലവ്' : 'Discount Cost'}</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <div class="w-3.5 h-3 rounded-sm bg-secondary/65 shrink-0"></div>
+              <span>{language === 'ml' ? 'ഡിവിഡന്റ് ലാഭം' : 'Total Dividends Earned'}</span>
+            </div>
+          </div>
+
+          <!-- Row: Early Bidder Month 1 -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <div class="flex items-center gap-2 shrink-0 min-w-[160px]">
+                <div class="w-9 h-9 rounded-xl bg-error/15 flex items-center justify-center text-error shrink-0">
+                  <span class="material-symbols-outlined text-sm">bolt</span>
+                </div>
+                <div>
+                  <div class="text-[11px] font-bold text-on-surface">{language === 'ml' ? 'ആദ്യ മാസ ലേലം' : 'Month 1 Bidder'}</div>
+                  <div class="text-[9px] text-on-surface-variant font-medium">{language === 'ml' ? 'ഉടൻ ₹18.75L ലഭിക്കുന്നു' : 'Gets cash fast ₹18.75L'}</div>
+                </div>
+              </div>
+              <div class="flex-1 min-w-[120px] space-y-1.5">
+                <div class="relative h-4 bg-outline-variant/20 rounded-full overflow-hidden">
+                  <div class="absolute left-0 top-0 h-full bg-error/60 rounded-full" style="width: 80%"></div>
+                </div>
+                <div class="relative h-4 bg-outline-variant/20 rounded-full overflow-hidden">
+                  <div class="absolute left-0 top-0 h-full bg-secondary/60 rounded-full" style="width: 2%"></div>
+                </div>
+              </div>
+              <div class="text-right shrink-0 w-28 font-data-mono text-[10px] font-bold">
+                <div class="text-error">−₹5,00,000</div>
+                <div class="text-secondary">+₹0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row: Month 50 Bidder -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <div class="flex items-center gap-2 shrink-0 min-w-[160px]">
+                <div class="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center text-primary shrink-0">
+                  <span class="material-symbols-outlined text-sm">balance</span>
+                </div>
+                <div>
+                  <div class="text-[11px] font-bold text-on-surface">{language === 'ml' ? 'മദ്ധ്യ മാസ ലേലം (50)' : 'Month 50 Bidder'}</div>
+                  <div class="text-[9px] text-on-surface-variant font-medium">{language === 'ml' ? 'ചെലവും ലാഭവും ഏകദേശം സമം' : 'Break-even point'}</div>
+                </div>
+              </div>
+              <div class="flex-1 min-w-[120px] space-y-1.5">
+                <div class="relative h-4 bg-outline-variant/20 rounded-full overflow-hidden">
+                  <div class="absolute left-0 top-0 h-full bg-error/60 rounded-full" style="width: 44%"></div>
+                </div>
+                <div class="relative h-4 bg-outline-variant/20 rounded-full overflow-hidden">
+                  <div class="absolute left-0 top-0 h-full bg-secondary/60 rounded-full" style="width: 36%"></div>
+                </div>
+              </div>
+              <div class="text-right shrink-0 w-28 font-data-mono text-[10px] font-bold">
+                <div class="text-error">~−₹3,00,000</div>
+                <div class="text-secondary">~+₹1,87,500</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row: Month 100 Patient Subscriber -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <div class="flex items-center gap-2 shrink-0 min-w-[160px]">
+                <div class="w-9 h-9 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary shrink-0">
+                  <span class="material-symbols-outlined text-sm">savings</span>
+                </div>
+                <div>
+                  <div class="text-[11px] font-bold text-on-surface">{language === 'ml' ? 'അവസാന മാസ വരിക്കാർ' : 'Month 100 Subscriber'}</div>
+                  <div class="text-[9px] text-on-surface-variant font-medium">{language === 'ml' ? 'ഡിസ്കൗണ്ട് ഇല്ല, ഡിവിഡന്റ് പരമ്പര' : 'No bid cost, all dividends'}</div>
+                </div>
+              </div>
+              <div class="flex-1 min-w-[120px] space-y-1.5">
+                <div class="relative h-4 bg-outline-variant/20 rounded-full overflow-hidden">
+                  <div class="absolute left-0 top-0 h-full bg-error/60 rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="relative h-4 bg-outline-variant/20 rounded-full overflow-hidden">
+                  <div class="absolute left-0 top-0 h-full bg-secondary/60 rounded-full" style="width: 80%"></div>
+                </div>
+              </div>
+              <div class="text-right shrink-0 w-28 font-data-mono text-[10px] font-bold">
+                <div class="text-error">₹0</div>
+                <div class="text-secondary">~+₹3,75,000</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Insight callout -->
+          <div class="p-4 rounded-2xl bg-primary/5 border border-primary/15 text-xs leading-relaxed">
+            <span class="material-symbols-outlined text-primary align-middle text-sm mr-1">tips_and_updates</span>
+            <span class="font-bold text-primary">{language === 'ml' ? 'ഉൾക്കാഴ്ച:' : 'Key Insight:'}</span>
+            <span class="text-on-surface-variant ml-1 font-medium">
+              {language === 'ml'
+                ? 'ആദ്യ മാസം ലേലം ചെയ്യുന്നത് അടിയന്തിര ആവശ്യങ്ങൾക്ക് നല്ലതാണ്, പക്ഷേ ഡിസ്കൗണ്ട് ചെലവ് ഉണ്ടാകും. ക്ഷമ കാണിച്ച് ഡിവിഡന്റ് ശേഖരിക്കുന്നതാണ് "Substitution" തന്ത്രം.'
+                : 'Early bidding gives immediate liquidity but at a premium discount cost. Staying patient to collect monthly dividends then receiving the full chit value at the end is the optimal substitution strategy.'}
+            </span>
+          </div>
+
+          <p class="text-center text-[9px] text-on-surface-variant opacity-60">{language === 'ml' ? '* ₹25,00,000 ചിട്ടി അടിസ്ഥാനമാക്കിയ ഏകദേശ കണക്കുകൾ' : '* Approximate figures based on a ₹25,00,000 hypothetical chit'}</p>
+        </div>
+      </section>
+
       <!-- INTERACTIVE EXAMPLE PANEL -->
       <section class="glass-card rounded-3xl p-6 lg:p-10 border border-outline-variant/30 relative">
         <h2 class="font-headline-md text-xl lg:text-2xl font-bold text-primary flex items-center gap-2 mb-4">
@@ -564,6 +685,117 @@
                 : 'Consequently, in the next month, members pay ₹21,250 (₹25,000 installment minus ₹3,750 dividend) instead of the full ₹25,000.'}
             </li>
           </ol>
+        </div>
+      </section>
+
+      <!-- INFOGRAPHIC: MONEY FLOW DIAGRAM -->
+      <section class="space-y-6">
+        <div class="text-center space-y-2">
+          <h2 class="font-headline-md text-2xl lg:text-3xl font-bold text-primary tracking-tight">
+            {language === 'ml' ? 'ഒരു ലേലത്തിലെ പണ ഒഴുക്ക്' : 'Money Flow in One Auction Month'}
+          </h2>
+          <p class="text-on-surface-variant text-xs md:text-sm font-semibold">
+            {language === 'ml' ? '₹25 ലക്ഷം മൂന്ന് ദിശകളിലേക്ക് ഒഴുകുന്ന വഴി' : 'How ₹25,00,000 splits three ways through a single auction'}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 lg:p-10 border border-outline-variant/30 space-y-8">
+
+          <!-- Source: Subscribers pool -->
+          <div class="flex flex-col items-center gap-3">
+            <h3 class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">{language === 'ml' ? 'ഉറവിടം' : 'Source'}</h3>
+            <div class="flex flex-wrap justify-center gap-1.5">
+              {#each Array.from({length: 10}) as _}
+                <div class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary/10 border border-primary/20 text-[9px] font-bold text-primary">
+                  <span class="material-symbols-outlined text-[11px]">person</span>₹25,000
+                </div>
+              {/each}
+              <div class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-outline-variant/20 border border-outline-variant/30 text-[9px] font-bold text-on-surface-variant">
+                +90 {language === 'ml' ? 'പേർ' : 'more'}
+              </div>
+            </div>
+            <p class="text-[10px] text-on-surface-variant font-semibold">
+              100 {language === 'ml' ? 'അംഗങ്ങൾ' : 'members'} × ₹25,000 = <span class="text-primary font-bold">₹25,00,000</span>
+            </p>
+            <div class="flex flex-col items-center">
+              <div class="w-px h-8 bg-gradient-to-b from-primary/60 to-primary/20"></div>
+              <span class="material-symbols-outlined text-primary/60 text-xl -mt-1">arrow_downward</span>
+            </div>
+          </div>
+
+          <!-- Auction event node -->
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-full max-w-sm mx-auto px-6 py-4 rounded-2xl border border-outline-variant/30 bg-outline-variant/10 text-center">
+              <div class="flex items-center justify-center gap-2 mb-1">
+                <span class="material-symbols-outlined text-on-surface text-xl">gavel</span>
+                <span class="font-bold text-on-surface text-sm">{language === 'ml' ? 'ലേലം' : 'Auction'}</span>
+              </div>
+              <p class="text-[10px] text-on-surface-variant font-semibold">
+                {language === 'ml'
+                  ? 'ഒരു അംഗം ₹20,00,000-ന് ലേലം ജയിക്കുന്നു → ₹5,00,000 ഡിസ്കൗണ്ട്'
+                  : 'One member wins bid at ₹20,00,000 → ₹5,00,000 discount created'}
+              </p>
+            </div>
+            <!-- Three split arrows -->
+            <div class="flex justify-around w-full max-w-xl">
+              <div class="flex flex-col items-center">
+                <div class="w-px h-7 bg-secondary/50"></div>
+                <span class="material-symbols-outlined text-secondary/70 text-base -mt-1">arrow_downward</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-px h-7 bg-error/50"></div>
+                <span class="material-symbols-outlined text-error/70 text-base -mt-1">arrow_downward</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <div class="w-px h-7 bg-primary/50"></div>
+                <span class="material-symbols-outlined text-primary/70 text-base -mt-1">arrow_downward</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Three destination cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+            <!-- Winner -->
+            <div class="p-5 rounded-2xl bg-secondary/10 border border-secondary/25 text-center space-y-2">
+              <div class="w-11 h-11 rounded-2xl bg-secondary/20 flex items-center justify-center text-secondary mx-auto">
+                <span class="material-symbols-outlined text-xl">emoji_events</span>
+              </div>
+              <div class="text-xs font-bold text-secondary">{language === 'ml' ? 'ലേലവിജയി' : 'Auction Winner'}</div>
+              <div class="font-data-mono font-bold text-secondary text-2xl">₹18,75,000</div>
+              <div class="text-[10px] text-on-surface-variant font-medium leading-relaxed">
+                {language === 'ml' ? 'ചിട്ടി − ഡിസ്കൗണ്ട് − കമ്മീഷൻ' : 'Pool − Discount − Commission'}
+              </div>
+              <div class="font-data-mono text-[9px] text-outline">₹25L − ₹5L − ₹1.25L</div>
+            </div>
+
+            <!-- Foreman -->
+            <div class="p-5 rounded-2xl bg-error/5 border border-error/20 text-center space-y-2">
+              <div class="w-11 h-11 rounded-2xl bg-error/10 flex items-center justify-center text-error mx-auto">
+                <span class="material-symbols-outlined text-xl">manage_accounts</span>
+              </div>
+              <div class="text-xs font-bold text-error">{language === 'ml' ? 'ഫോർമാൻ കമ്മീഷൻ' : 'Foreman Commission'}</div>
+              <div class="font-data-mono font-bold text-error text-2xl">₹1,25,000</div>
+              <div class="text-[10px] text-on-surface-variant font-medium leading-relaxed">
+                5% {language === 'ml' ? 'ചിട്ടി തുകയിൽ' : 'of Chit Value'}
+              </div>
+              <div class="font-data-mono text-[9px] text-outline">₹25,00,000 × 5%</div>
+            </div>
+
+            <!-- Dividends -->
+            <div class="p-5 rounded-2xl bg-primary/5 border border-primary/20 text-center space-y-2">
+              <div class="w-11 h-11 rounded-2xl bg-primary/15 flex items-center justify-center text-primary mx-auto">
+                <span class="material-symbols-outlined text-xl">diversity_3</span>
+              </div>
+              <div class="text-xs font-bold text-primary">{language === 'ml' ? 'ഓരോ അംഗത്തിനും ഡിവിഡന്റ്' : 'Dividend Per Member'}</div>
+              <div class="font-data-mono font-bold text-primary text-2xl">₹3,750</div>
+              <div class="text-[10px] text-on-surface-variant font-medium leading-relaxed">
+                {language === 'ml' ? 'നെറ്റ് ഡിസ്കൗണ്ട് ÷ 100 അംഗങ്ങൾ' : 'Net Discount ÷ 100 members'}
+              </div>
+              <div class="font-data-mono text-[9px] text-outline">(₹5L − ₹1.25L) ÷ 100</div>
+            </div>
+
+          </div>
         </div>
       </section>
 
@@ -657,6 +889,162 @@
               <span>{language === 'ml' ? 'ലേലത്തിലെ അമിതമായ മത്സരം കാരണം കയ്യിൽ കിട്ടുന്ന തുക വളരെ കുറഞ്ഞു പോകാം.' : 'Competitive bidding discounts can significantly reduce net payout.'}</span>
             </li>
           </ul>
+        </div>
+      </section>
+
+      <!-- INFOGRAPHIC: CHIT vs FD vs LOAN COMPARISON -->
+      <section class="space-y-6">
+        <div class="text-center space-y-2">
+          <h2 class="font-headline-md text-2xl lg:text-3xl font-bold text-primary tracking-tight">
+            {language === 'ml' ? 'ചിട്ടി vs ബാങ്ക് FD vs വ്യക്തിഗത വായ്പ' : 'Chit Fund vs Bank FD vs Personal Loan'}
+          </h2>
+          <p class="text-on-surface-variant text-xs md:text-sm font-semibold">
+            {language === 'ml' ? 'ഈ മൂന്ന് ജനകീയ സാമ്പത്തിക ഉൽപ്പന്നങ്ങൾ തമ്മിലുള്ള ഒറ്റനോട്ട താരതമ്യം' : 'A quick at-a-glance comparison of three common financial instruments'}
+          </p>
+        </div>
+
+        <div class="glass-card rounded-3xl overflow-hidden border border-outline-variant/30">
+
+          <!-- Header -->
+          <div class="grid grid-cols-4 bg-outline-variant/10 border-b border-outline-variant/20">
+            <div class="p-4 text-[9px] uppercase tracking-widest text-on-surface-variant font-bold border-r border-outline-variant/20 flex items-center">
+              {language === 'ml' ? 'ഘടകം' : 'Feature'}
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/20">
+              <span class="material-symbols-outlined text-primary text-xl block mb-1">savings</span>
+              <span class="text-[11px] font-bold text-primary">{language === 'ml' ? 'ചിട്ടി' : 'Chit Fund'}</span>
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/20">
+              <span class="material-symbols-outlined text-secondary text-xl block mb-1">account_balance</span>
+              <span class="text-[11px] font-bold text-secondary">{language === 'ml' ? 'ബാങ്ക് FD' : 'Bank FD'}</span>
+            </div>
+            <div class="p-4 text-center">
+              <span class="material-symbols-outlined text-error text-xl block mb-1">credit_card</span>
+              <span class="text-[11px] font-bold text-error">{language === 'ml' ? 'വ്യക്തിഗത വായ്പ' : 'Personal Loan'}</span>
+            </div>
+          </div>
+
+          <!-- Row: Liquidity -->
+          <div class="grid grid-cols-4 border-b border-outline-variant/10 hover:bg-outline-variant/5 transition-colors">
+            <div class="p-4 text-xs font-semibold text-on-surface-variant border-r border-outline-variant/10 flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm text-outline shrink-0">water_drop</span>
+              {language === 'ml' ? 'ലഭ്യത' : 'Liquidity'}
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-primary text-lg">radio_button_checked</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'ലേലം വഴി' : 'Via Auction'}</div>
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-error text-lg">cancel</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'ലോക്ക്-ഇൻ' : 'Lock-in Period'}</div>
+            </div>
+            <div class="p-4 text-center">
+              <span class="material-symbols-outlined text-secondary text-lg">check_circle</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'ഉടൻ ലഭ്യം' : 'Immediate'}</div>
+            </div>
+          </div>
+
+          <!-- Row: Returns -->
+          <div class="grid grid-cols-4 border-b border-outline-variant/10 hover:bg-outline-variant/5 transition-colors">
+            <div class="p-4 text-xs font-semibold text-on-surface-variant border-r border-outline-variant/10 flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm text-outline shrink-0">trending_up</span>
+              {language === 'ml' ? 'വരുമാനം' : 'Returns'}
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-primary text-lg">radio_button_checked</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'ഡിവിഡന്റ്' : 'Variable Dividend'}</div>
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-secondary text-lg">check_circle</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'ഉറപ്പ് പലിശ' : 'Guaranteed Interest'}</div>
+            </div>
+            <div class="p-4 text-center">
+              <span class="material-symbols-outlined text-error text-lg">cancel</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'ഇല്ല (ചെലവ് മാത്രം)' : 'None (cost only)'}</div>
+            </div>
+          </div>
+
+          <!-- Row: Savings Discipline -->
+          <div class="grid grid-cols-4 border-b border-outline-variant/10 hover:bg-outline-variant/5 transition-colors">
+            <div class="p-4 text-xs font-semibold text-on-surface-variant border-r border-outline-variant/10 flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm text-outline shrink-0">schedule</span>
+              {language === 'ml' ? 'സമ്പാദ്യ ശീലം' : 'Savings Discipline'}
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-secondary text-lg">check_circle</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'നിർബന്ധ മാസ അടവ്' : 'Enforced Monthly'}</div>
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-primary text-lg">radio_button_checked</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'ഒരേ ഒരു തവണ' : 'One-time Deposit'}</div>
+            </div>
+            <div class="p-4 text-center">
+              <span class="material-symbols-outlined text-error text-lg">cancel</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'EMI ബാധ്യത' : 'EMI Repayment Burden'}</div>
+            </div>
+          </div>
+
+          <!-- Row: Risk Level -->
+          <div class="grid grid-cols-4 border-b border-outline-variant/10 hover:bg-outline-variant/5 transition-colors">
+            <div class="p-4 text-xs font-semibold text-on-surface-variant border-r border-outline-variant/10 flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm text-outline shrink-0">warning</span>
+              {language === 'ml' ? 'റിസ്ക്' : 'Risk Level'}
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-primary text-lg">radio_button_checked</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'ഫോർമാൻ / ഡിഫോൾട്ട്' : 'Foreman/Default Risk'}</div>
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-secondary text-lg">check_circle</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'DICGC ഉറപ്പ്' : 'DICGC Insured'}</div>
+            </div>
+            <div class="p-4 text-center">
+              <span class="material-symbols-outlined text-error text-lg">cancel</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">{language === 'ml' ? 'ഉയർന്ന പലിശ നിരക്ക്' : 'High Interest Rate'}</div>
+            </div>
+          </div>
+
+          <!-- Row: Regulation -->
+          <div class="grid grid-cols-4 hover:bg-outline-variant/5 transition-colors">
+            <div class="p-4 text-xs font-semibold text-on-surface-variant border-r border-outline-variant/10 flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm text-outline shrink-0">gavel</span>
+              {language === 'ml' ? 'നിയന്ത്രണം' : 'Regulation'}
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-primary text-lg">radio_button_checked</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">Chit Funds Act 1982</div>
+            </div>
+            <div class="p-4 text-center border-r border-outline-variant/10">
+              <span class="material-symbols-outlined text-secondary text-lg">check_circle</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">RBI {language === 'ml' ? 'നിയന്ത്രണം' : 'Regulated'}</div>
+            </div>
+            <div class="p-4 text-center">
+              <span class="material-symbols-outlined text-secondary text-lg">check_circle</span>
+              <div class="text-[9px] text-on-surface-variant mt-1 font-medium">RBI / NBFC</div>
+            </div>
+          </div>
+
+          <!-- Legend footer -->
+          <div class="p-4 bg-outline-variant/5 border-t border-outline-variant/20 text-center">
+            <div class="flex flex-wrap gap-4 justify-center text-[10px] font-semibold text-on-surface-variant">
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+                {language === 'ml' ? 'ഗുണകരം' : 'Advantageous'}
+              </span>
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-primary text-sm">radio_button_checked</span>
+                {language === 'ml' ? 'ഭേദം' : 'Moderate'}
+              </span>
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-error text-sm">cancel</span>
+                {language === 'ml' ? 'ദോഷകരം' : 'Disadvantageous'}
+              </span>
+            </div>
+            <p class="text-[9px] text-on-surface-variant mt-2 opacity-70">
+              {language === 'ml' ? '* വിദ്യാഭ്യാസ ആവശ്യത്തിന് മാത്രം. യഥാർത്ഥ വ്യവസ്ഥകൾ വ്യത്യസ്തമാകാം.' : '* Simplified for educational purposes. Actual terms vary by provider.'}
+            </p>
+          </div>
+
         </div>
       </section>
 
