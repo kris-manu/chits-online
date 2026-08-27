@@ -3,10 +3,139 @@
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
   import { fade, slide, fly } from "svelte/transition";
+  import Tooltip from "./chit/Tooltip.svelte";
 
   // State variables (Svelte 5 Runes)
   let calculatorMode = $state("substitution"); // Default to 'substitution'
   let theme = $state("light");
+  let language = $state("ml"); // Default to Malayalam as primary
+
+  // Bilingual translation dictionary
+  const translations = {
+    ml: {
+      title: "സബ്സ്റ്റിറ്റ്യൂഷൻ ചിട്ടി",
+      calculatorMode: "കാൽക്കുലേറ്റർ മോഡ്",
+      chittySub: "ചിട്ടി സബ്സ്റ്റിറ്റ്യൂഷൻ",
+      loanEmi: "ലോൺ ഇ.എം.ഐ (EMI)",
+      subDetails: "സബ്സ്റ്റിറ്റ്യൂഷൻ വിവരങ്ങൾ",
+      loanParams: "ലോൺ വിവരങ്ങൾ",
+      adjustValues: "മൂല്യങ്ങൾ ക്രമീകരിക്കുക",
+      chitValue: "ചിട്ടി തുക (Chit Value)",
+      totalMonths: "ആകെ മാസങ്ങൾ (N)",
+      joinMonth: "ചേരുന്ന മാസം (k)",
+      subAmount: "സബ്സ്റ്റിറ്റ്യൂഷൻ തുക (Buy-in)",
+      lastAuctionAmount: "അവസാന ലേല തുക",
+      avgPastDiscount: "കഴിഞ്ഞ ശരാശരി ഡിസ്കൗണ്ട്",
+      expFutureDiscount: "പ്രതീക്ഷിക്കുന്ന ഭാവി ഡിസ്കൗണ്ട്",
+      expBidClaimMonth: "ചിട്ടി വിളിക്കാൻ ഉദ്ദേശിക്കുന്ന മാസം",
+      recalculate: "വീണ്ടും കണക്കുകൂട്ടുക",
+      estimatedEmi: "പ്രതിമാസ തവണ (EMI)",
+      compoundYield: "വാർഷിക നേട്ടം (Annualized IRR)",
+      marginRatio: "അനുപാതം (Ratio)",
+      buyInJoinCost: "ചേരാനുള്ള തുക (Join Cost)",
+      futureContributions: "ഭാവി തവണകൾ",
+      expectedProfit: "പ്രതീക്ഷിക്കുന്ന ലാഭം",
+      netPrizePayout: "ലഭിക്കുന്ന സമ്മാന തുക",
+      principalAmount: "ലോൺ തുക (Principal)",
+      totalInterest: "ആകെ പലിശ (Interest)",
+      totalRepayment: "ആകെ തിരിച്ചടവ്",
+      outstandingPrincipal: "ബാക്കിയുള്ള ലോൺ തുക",
+      breakEven: "ബ്രേക്ക് ഈവൻ",
+      cashFlowMilestone: "ചിട്ടിയിലെ പണമിടപാടുകൾ",
+      requestEnrolment: "ചിട്ടിയിൽ ചേരുവാൻ അപേക്ഷിക്കുക",
+      downloadPdf: "PDF ഡൗൺലോഡ് ചെയ്യുക",
+      searchSchedule: "തിരയുക...",
+      monthIndex: "മാസം",
+      transactionMilestone: "ഇടപാട് വിവരങ്ങൾ",
+      cashFlow: "പണമിടപാട് (+/-)",
+      cumulativePosition: "ആകെ സാമ്പത്തിക നില",
+      details: "വിശദാംശങ്ങൾ",
+      year: "വർഷം",
+      openingBalance: "തുടക്കത്തിലെ ബാക്കി",
+      interestPaid: "അടച്ച പലിശ",
+      principalPaid: "അടച്ച അസ്സൽ",
+      closingBalance: "അവസാനത്തെ ബാക്കി",
+      monthlyBreakdown: "പ്രതിമാസ വിവരങ്ങൾ",
+      month: "മാസം",
+      previous: "മുൻപിലത്തെ",
+      next: "അടുത്തത്",
+      // Quick tips
+      tipTitleSub: "സബ്സ്റ്റിറ്റ്യൂഷൻ ലാഭവിവരം",
+      tipDescSub: "ചിട്ടിയിലെ പണമിടപാടുകൾ കണക്കിലെടുത്ത് നിങ്ങളുടെ നിക്ഷേപത്തിന്റെ യഥാർത്ഥ വാർഷിക വളർച്ചയാണ് IRR പ്രതിനിധീകരിക്കുന്നത്.",
+      tipTitleEmi: "തിരിച്ചടവ് വിവരങ്ങൾ",
+      tipDescEmi: "വർഷങ്ങൾ കഴിയുംതോറും അസ്സൽ തുക വേഗത്തിൽ കുറയുന്നു, കാരണം പലിശ കുറഞ്ഞു വരുന്നു.",
+      // Tooltips
+      chitValueTooltip: "ചിട്ടിയിലെ എല്ലാ തവണകളും ചേർത്തുണ്ടാകുന്ന ആകെ തുകയാണിത്. ഉദാഹരണത്തിന്, 25,000 രൂപ വീതം 100 മാസം അടയ്ക്കുന്ന ചിട്ടിയുടെ ആകെ തുക 25 ലക്ഷം രൂപയാണ്.",
+      monthlyInstallmentTooltip: "ഓരോ മാസവും ഒരു ചിട്ടി അംഗം അടയ്ക്കേണ്ട തുകയാണിത്. ചിട്ടിയുടെ ആകെ തുകയെ ആകെ മാസങ്ങൾ കൊണ്ട് ഹരിച്ചാണ് ഇത് കണക്കാക്കുന്നത്.",
+      discountTooltip: "ചിട്ടി ലേലം വിളിക്കുമ്പോൾ ആകെ ചിട്ടി തുകയിൽ നിന്നും കുറയ്ക്കുന്ന തുകയാണിത്. ഇത് പിന്നീട് ചിട്ടി അംഗങ്ങൾക്ക് വീതിച്ചു നൽകുന്നു.",
+      dividendTooltip: "ചിട്ടി ലേലം വിളിക്കുമ്പോൾ ഉണ്ടാകുന്ന ഡിസ്കൗണ്ട് തുക അംഗങ്ങൾക്ക് വീതിച്ചു നൽകുന്ന ലാഭവിഹിതമാണിത്. ഇത് ഓരോ മാസത്തെയും അടവ് തുക കുറയ്ക്കാൻ സഹായിക്കുന്നു.",
+      prizeMoneyTooltip: "ലേലം ജയിച്ച ചിട്ടി അംഗത്തിന് ഫോർമാൻ കമ്മീഷനും മറ്റ് നിയമപരമായ കിഴിവുകൾക്കും ശേഷം ലഭിക്കുന്ന യഥാർത്ഥ തുകയാണിത്.",
+      foremanCommissionTooltip: "ചിട്ടി നടത്തിപ്പുകാരനായ ഫോർമാൻ (ഉദാ: KSFE) ചിട്ടി നിയന്ത്രിക്കുന്നതിനായി ഈടാക്കുന്ന കമ്മീഷൻ തുകയാണിത് (സാധാരണയായി 5%).",
+    },
+    en: {
+      title: "Substitution Chitty",
+      calculatorMode: "Calculator Mode",
+      chittySub: "Chitty Substitution",
+      loanEmi: "Loan EMI Mode",
+      subDetails: "Substitution Details",
+      loanParams: "Loan Parameters",
+      adjustValues: "Adjust values to calculate instantly",
+      chitValue: "Chit Scheme Value",
+      totalMonths: "Total Months (N)",
+      joinMonth: "Join Month (k)",
+      subAmount: "Substitution Amount (Buy-in)",
+      lastAuctionAmount: "Last Auction Amount",
+      avgPastDiscount: "Avg. Past Discount",
+      expFutureDiscount: "Expected Future Discount",
+      expBidClaimMonth: "Expected Bid Claim Month",
+      recalculate: "Re-calculate Scenario",
+      estimatedEmi: "Estimated Monthly Installment (EMI)",
+      compoundYield: "Compound Yield (Annualized IRR)",
+      marginRatio: "Margin : Ratio",
+      buyInJoinCost: "Buy-in (Join Cost)",
+      futureContributions: "Future Contributions",
+      expectedProfit: "Expected Profit",
+      netPrizePayout: "Net Prize Payout",
+      principalAmount: "Principal Amount",
+      totalInterest: "Total Interest",
+      totalRepayment: "Total Repayment",
+      outstandingPrincipal: "Outstanding Principal Curve",
+      breakEven: "Break Even",
+      cashFlowMilestone: "Substitution Cash Flow Milestone",
+      requestEnrolment: "Request Subscriber Enrolment",
+      downloadPdf: "Export PDF",
+      searchSchedule: "Search schedule...",
+      monthIndex: "Month Index",
+      transactionMilestone: "Transaction / Milestone",
+      cashFlow: "Cash Outflow/Inflow",
+      cumulativePosition: "Cumulative Position",
+      details: "Details",
+      year: "Year",
+      openingBalance: "Opening Balance",
+      interestPaid: "Interest Paid",
+      principalPaid: "Principal Paid",
+      closingBalance: "Closing Balance",
+      monthlyBreakdown: "Monthly Breakdown",
+      month: "Month",
+      previous: "Previous",
+      next: "Next",
+      // Quick tips
+      tipTitleSub: "Substitution Yield Details",
+      tipDescSub: "IRR represents the true compound growth of your investments considering the net inflows.",
+      tipTitleEmi: "Amortization Overview",
+      tipDescEmi: "Outstanding principal decreases faster in later years due to compound reduction.",
+      // Tooltips
+      chitValueTooltip: "The total value of the chit scheme. For example, if the monthly installment is ₹25,000 for 100 months, the gross chit value is ₹25,00,000.",
+      monthlyInstallmentTooltip: "The amount each subscriber contributes in every round/month. It is calculated as Chit Value divided by the total number of months.",
+      discountTooltip: "The amount by which the chit value is reduced during the auction. The winning bidder foregoes this amount, which is then distributed as dividend.",
+      dividendTooltip: "The share of the auction discount distributed among all subscribers, which reduces their monthly installment amount.",
+      prizeMoneyTooltip: "The actual amount received by the auction winner after deducting the foreman's commission and the auction discount.",
+      foremanCommissionTooltip: "The fee charged by the chit manager (foreman) for organizing and running the chit, typically a fixed percentage like 5% of the chit value.",
+    }
+  };
+
+  const t = $derived(translations[language]);
+
 
   // EMI Mode parameters
   let rate = $state(8.5);
@@ -31,6 +160,28 @@
   let avgDiscountPercent = $state(25); // Average discount so far
   let futureDiscountPercent = $state(15); // Expected future discount
   let claimMonth = $state(30); // When the substitute plans to bid/claim
+
+  // Additional parameters for direct inputs
+  let lastAuctionAmount = $state(850000);
+  let substitutionAmount = $state(225000);
+
+  // Sync sliders -> text inputs on parameter change
+  $effect(() => {
+    const totalFace = currentMonth * (chitValue / chitMonths);
+    const expectedSub = totalFace * (1 - avgDiscountPercent / 100);
+    
+    // Only update if there is a meaningful difference to avoid cursor jumping
+    if (Math.abs(substitutionAmount - expectedSub) > 1) {
+      substitutionAmount = Math.round(expectedSub);
+    }
+  });
+
+  $effect(() => {
+    const expectedLast = chitValue * (1 - futureDiscountPercent / 100);
+    if (Math.abs(lastAuctionAmount - expectedLast) > 1) {
+      lastAuctionAmount = Math.round(expectedLast);
+    }
+  });
 
   // Derived configurations
   const config = $derived(currencyConfigs["INR"]);
@@ -567,6 +718,11 @@
     const isDark = document.documentElement.classList.contains("dark");
     theme = isDark ? "dark" : "light";
 
+    const storedLang = localStorage.getItem("app-lang");
+    if (storedLang === "ml" || storedLang === "en") {
+      language = storedLang;
+    }
+
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
@@ -636,7 +792,7 @@
   <main class="min-h-screen flex flex-col relative z-10">
     <!-- Top Bar -->
     <header
-      class="flex justify-between items-center w-full px-6 lg:px-12 h-18 sticky top-0 z-40 bg-background/45 backdrop-blur-3xl border-b border-outline-variant/30"
+      class="flex justify-between items-center w-full px-4 lg:px-12 h-18 sticky top-0 z-40 bg-background/45 backdrop-blur-3xl border-b border-outline-variant/30"
     >
       <div class="flex items-center gap-3">
         <div
@@ -646,36 +802,74 @@
             >account_balance</span
           >
         </div>
-        <span class="font-headline-md text-xl font-bold tracking-tight text-primary">
-          Substitution Chitty
+        <span class="font-headline-md text-base md:text-xl font-bold tracking-tight text-primary">
+          {language === 'ml' ? 'ചിട്ടി കാൽക്കുലേറ്റർ' : 'Substitution Chitty'}
         </span>
+        
+        <a 
+          href="/" 
+          class="ml-2 md:ml-4 px-2.5 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 hover:border-primary/40 text-[10px] md:text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+        >
+          <span class="material-symbols-outlined text-xs md:text-sm font-bold">menu_book</span>
+          <span>{language === 'ml' ? 'ചിട്ടി പദങ്ങൾ' : 'Chit Basics'}</span>
+        </a>
       </div>
 
-      <div class="flex items-center gap-6">
-        <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="flex items-center gap-2">
+          <!-- Language Selector -->
+          <div class="flex p-0.5 bg-outline-variant/15 dark:bg-white/5 rounded-xl border border-outline-variant/30 dark:border-white/10 relative overflow-hidden w-28 md:w-32 shadow-inner shrink-0">
+            <div 
+              class="absolute top-0.5 bottom-0.5 left-0.5 rounded-lg bg-primary transition-all duration-300 ease-out z-0 shadow"
+              style="width: calc(50% - 2px); transform: translateX({language === 'ml' ? '0%' : '100%'});"
+            ></div>
+            <button 
+              type="button" 
+              class="flex-1 py-1 text-center text-[9px] md:text-[10px] font-bold rounded-lg transition-all duration-300 z-10 cursor-pointer {language === 'ml' ? 'text-on-primary' : 'text-on-surface-variant hover:text-on-surface'}"
+              onclick={() => {
+                language = 'ml';
+                localStorage.setItem('app-lang', 'ml');
+                triggerToast('ഭാഷ മലയാളത്തിലേക്ക് മാറ്റി');
+              }}
+            >
+              മലയാളം
+            </button>
+            <button 
+              type="button" 
+              class="flex-1 py-1 text-center text-[9px] md:text-[10px] font-bold rounded-lg transition-all duration-300 z-10 cursor-pointer {language === 'en' ? 'text-on-primary' : 'text-on-surface-variant hover:text-on-surface'}"
+              onclick={() => {
+                language = 'en';
+                localStorage.setItem('app-lang', 'en');
+                triggerToast('Language switched to English');
+              }}
+            >
+              English
+            </button>
+          </div>
+
           <!-- Dark/Light Theme Switcher -->
           <button
-            class="w-10 h-10 rounded-xl bg-outline-variant/25 dark:bg-white/5 border border-outline-variant/30 dark:border-white/10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-all cursor-pointer active:scale-95 shadow-sm"
+            class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-outline-variant/25 dark:bg-white/5 border border-outline-variant/30 dark:border-white/10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-all cursor-pointer active:scale-95 shadow-sm"
             onclick={() => {
               theme = theme === 'dark' ? 'light' : 'dark';
-              triggerToast(`Theme switched to ${theme} mode`);
+              triggerToast(language === 'ml' ? `തീം ${theme === 'dark' ? 'ഡാർക്ക്' : 'ലൈറ്റ്'} മോഡിലേക്ക് മാറ്റി` : `Theme switched to ${theme} mode`);
             }}
             aria-label="Toggle Theme"
           >
             {#if theme === 'dark'}
-              <span class="material-symbols-outlined text-lg animate-float">light_mode</span>
+              <span class="material-symbols-outlined text-sm md:text-lg animate-float">light_mode</span>
             {:else}
-              <span class="material-symbols-outlined text-lg animate-float">dark_mode</span>
+              <span class="material-symbols-outlined text-sm md:text-lg animate-float">dark_mode</span>
             {/if}
           </button>
 
           <button
-            class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer text-xl"
-            onclick={() => triggerToast("All systems operational. No new alerts.")}
+            class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer text-base md:text-xl hidden sm:inline-block"
+            onclick={() => triggerToast(language === 'ml' ? "എല്ലാ സിസ്റ്റങ്ങളും സുരക്ഷിതമാണ്." : "All systems operational. No new alerts.")}
             >notifications</button
           >
           <div
-            class="h-8.5 w-8.5 rounded-xl overflow-hidden border border-primary/30 shadow-sm"
+            class="h-7.5 w-7.5 md:h-8.5 md:w-8.5 rounded-xl overflow-hidden border border-primary/30 shadow-sm hidden sm:block"
           >
             <img
               class="w-full h-full object-cover"
@@ -703,7 +897,7 @@
         >
           <div class="flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-lg">swap_horiz</span>
-            Chitty Substitution
+            {t.chittySub}
           </div>
         </button>
         <button 
@@ -713,7 +907,7 @@
         >
           <div class="flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-lg">calculate</span>
-            Loan EMI Mode
+            {t.loanEmi}
           </div>
         </button>
       </div>
@@ -727,12 +921,12 @@
               <div>
                 <h2 class="font-headline-md text-primary text-xl font-bold tracking-tight">
                   {#if calculatorMode === 'substitution'}
-                    Substitution Details
+                    {t.subDetails}
                   {:else}
-                    Loan Parameters
+                    {t.loanParams}
                   {/if}
                 </h2>
-                <p class="text-on-surface-variant text-xs mt-1">Adjust values to calculate instantly</p>
+                <p class="text-on-surface-variant text-xs mt-1">{t.adjustValues}</p>
               </div>
               <span class="material-symbols-outlined text-primary/40 text-2xl">tune</span>
             </div>
@@ -742,37 +936,55 @@
               <!-- Chit Scheme Value -->
               <div class="space-y-3" transition:fade={{ duration: 250 }}>
                 <div class="flex justify-between items-center">
-                  <label for="chit-val" class="font-label-sm text-on-surface-variant text-sm font-semibold">Chit Scheme Value</label>
+                  <label for="chit-value-input" class="font-label-sm text-on-surface-variant text-sm font-semibold flex items-center">
+                    {t.chitValue}
+                    <Tooltip id="chitValue" language={language} mlText={translations.ml.chitValueTooltip} text={translations.en.chitValueTooltip} link="/#chit-value" />
+                  </label>
                   <span class="font-data-mono text-primary text-lg font-bold">{formatCurrency(chitValue)}</span>
                 </div>
-                <div class="relative">
-                  <select
-                    id="chit-val"
-                    bind:value={chitValue}
-                    class="w-full bg-outline-variant/10 dark:bg-white/5 border border-outline-variant/40 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/30 backdrop-blur-xl cursor-pointer transition-all outline-none"
-                  >
-                    <option value={100000} class="bg-background text-on-background">{formatCurrency(100000)} (1 Lakh)</option>
-                    <option value={500000} class="bg-background text-on-background">{formatCurrency(500000)} (5 Lakhs)</option>
-                    <option value={1000000} class="bg-background text-on-background">{formatCurrency(1000000)} (10 Lakhs)</option>
-                    <option value={2500000} class="bg-background text-on-background">{formatCurrency(2500000)} (25 Lakhs)</option>
-                    <option value={5000000} class="bg-background text-on-background">{formatCurrency(5000000)} (50 Lakhs)</option>
-                  </select>
+                <div class="flex gap-2">
+                  <div class="relative flex-1">
+                    <input
+                      id="chit-value-input"
+                      type="number"
+                      bind:value={chitValue}
+                      min="10000"
+                      max="100000000"
+                      step="10000"
+                      class="w-full bg-outline-variant/10 dark:bg-white/5 border border-outline-variant/40 dark:border-white/10 rounded-xl px-4 py-2 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/30 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+                <!-- Quick Amount Pills -->
+                <div class="flex flex-wrap gap-2 pt-1">
+                  {#each [100000, 500000, 1000000, 2500000, 5000000] as opt}
+                    <button
+                      type="button"
+                      class="px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-wide uppercase border transition-all cursor-pointer {chitValue === opt ? 'bg-primary/20 border-primary text-primary' : 'bg-transparent border-outline-variant/30 text-on-surface-variant hover:border-primary/50'}"
+                      onclick={() => chitValue = opt}
+                    >
+                      {formatCurrency(opt)}
+                    </button>
+                  {/each}
                 </div>
               </div>
 
               <!-- Total Months & Substitution Month -->
               <div class="grid grid-cols-2 gap-4" transition:fade={{ duration: 250 }}>
                 <div class="space-y-2">
-                  <label for="chit-months" class="font-label-sm text-on-surface-variant text-xs font-semibold">Total Months (N)</label>
+                  <label for="chit-months" class="font-label-sm text-on-surface-variant text-xs font-semibold flex items-center">
+                    {t.totalMonths}
+                    <Tooltip id="chitPeriod" language={language} mlText={translations.ml.chitValueTooltip} text={translations.en.chitValueTooltip} link="/#chit-period" />
+                  </label>
                   <select
                     id="chit-months"
                     bind:value={chitMonths}
                     class="w-full bg-outline-variant/10 dark:bg-white/5 border border-outline-variant/40 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-on-surface outline-none"
                   >
-                    <option value={30} class="bg-background text-on-background">30 Months</option>
-                    <option value={40} class="bg-background text-on-background">40 Months</option>
-                    <option value={50} class="bg-background text-on-background">50 Months</option>
-                    <option value={100} class="bg-background text-on-background">100 Months</option>
+                    <option value={30} class="bg-background text-on-background">{language === 'ml' ? '30 മാസം' : '30 Months'}</option>
+                    <option value={40} class="bg-background text-on-background">{language === 'ml' ? '40 മാസം' : '40 Months'}</option>
+                    <option value={50} class="bg-background text-on-background">{language === 'ml' ? '50 മാസം' : '50 Months'}</option>
+                    <option value={100} class="bg-background text-on-background">{language === 'ml' ? '100 മാസം' : '100 Months'}</option>
                   </select>
                 </div>
                 <div class="space-y-2">
@@ -792,61 +1004,97 @@
                 </div>
               </div>
 
-              <!-- Average Past Discount & Expected Future Discount -->
-              <div class="space-y-4" transition:fade={{ duration: 250 }}>
-                <!-- Past discount -->
+              <!-- Substitution Amount & Last Auction Amount -->
+              <div class="grid grid-cols-2 gap-4" transition:fade={{ duration: 250 }}>
+                <div class="space-y-2">
+                  <label for="sub-amount-input" class="font-label-sm text-on-surface-variant text-xs font-semibold">Substitution Amount (Buy-in)</label>
+                  <input
+                    id="sub-amount-input"
+                    type="number"
+                    value={Math.round(substitutionAmount)}
+                    oninput={(e) => {
+                      const val = parseFloat(e.target.value) || 0;
+                      substitutionAmount = val;
+                      const totalFaceValue = currentMonth * (chitValue / chitMonths);
+                      avgDiscountPercent = totalFaceValue > 0 ? ((totalFaceValue - val) / totalFaceValue) * 100 : 0;
+                    }}
+                    class="w-full bg-outline-variant/10 dark:bg-white/5 border border-outline-variant/40 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-on-surface outline-none"
+                  />
+                </div>
+                <div class="space-y-2">
+                  <label for="last-auction-input" class="font-label-sm text-on-surface-variant text-xs font-semibold">Last Auction Amount</label>
+                  <input
+                    id="last-auction-input"
+                    type="number"
+                    value={Math.round(lastAuctionAmount)}
+                    oninput={(e) => {
+                      const val = parseFloat(e.target.value) || 0;
+                      lastAuctionAmount = val;
+                      futureDiscountPercent = chitValue > 0 ? ((chitValue - val) / chitValue) * 100 : 0;
+                    }}
+                    class="w-full bg-outline-variant/10 dark:bg-white/5 border border-outline-variant/40 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-on-surface outline-none"
+                  />
+                </div>
+              </div>
+
+              <!-- Avg. Past Discount & Expected Future Discount Sliders -->
+              <div class="grid grid-cols-2 gap-4" transition:fade={{ duration: 250 }}>
                 <div class="space-y-2">
                   <div class="flex justify-between">
-                    <label for="past-discount" class="font-label-sm text-on-surface-variant text-xs font-semibold">Avg. Past Discount (%)</label>
-                    <span class="font-data-mono text-primary font-bold text-xs">{avgDiscountPercent}%</span>
+                    <label for="past-discount" class="font-label-sm text-on-surface-variant text-xs font-semibold">Avg. Past Discount</label>
+                    <span class="font-data-mono text-primary font-bold text-xs">{Math.round(avgDiscountPercent)}%</span>
                   </div>
                   <input
                     id="past-discount"
                     type="range"
-                    min="5"
-                    max="40"
+                    min="0"
+                    max="50"
                     step="1"
                     bind:value={avgDiscountPercent}
-                    class="w-full h-1"
+                    class="w-full h-1 mt-2.5"
                   />
                 </div>
-
-                <!-- Future discount -->
                 <div class="space-y-2">
                   <div class="flex justify-between">
-                    <label for="future-discount" class="font-label-sm text-on-surface-variant text-xs font-semibold">Expected Future Discount (%)</label>
-                    <span class="font-data-mono text-primary font-bold text-xs">{futureDiscountPercent}%</span>
+                    <label for="future-discount" class="font-label-sm text-on-surface-variant text-xs font-semibold flex items-center">
+                      {t.expFutureDiscount}
+                      <Tooltip id="discount" language={language} mlText={translations.ml.discountTooltip} text={translations.en.discountTooltip} link="/#discount" />
+                    </label>
+                    <span class="font-data-mono text-primary font-bold text-xs">{Math.round(futureDiscountPercent)}%</span>
                   </div>
                   <input
                     id="future-discount"
                     type="range"
-                    min="5"
-                    max="40"
+                    min="0"
+                    max="50"
                     step="1"
                     bind:value={futureDiscountPercent}
-                    class="w-full h-1"
+                    class="w-full h-1 mt-2.5"
                   />
                 </div>
+              </div>
 
-                <!-- Claim Bid Month -->
-                <div class="space-y-2">
-                  <div class="flex justify-between">
-                    <label for="claim-month" class="font-label-sm text-on-surface-variant text-xs font-semibold">Expected Bid Claim Month</label>
-                    <span class="font-data-mono text-primary font-bold text-xs">Month {claimMonth}</span>
-                  </div>
-                  <input
-                    id="claim-month"
-                    type="range"
-                    min={currentMonth + 1}
-                    max={chitMonths}
-                    step="1"
-                    bind:value={claimMonth}
-                    class="w-full h-1"
-                  />
-                  <div class="flex justify-between text-[9px] text-outline font-bold">
-                    <span>Month {currentMonth + 1} (Soonest)</span>
-                    <span>Month {chitMonths} (End)</span>
-                  </div>
+              <!-- Claim Bid Month Slider -->
+              <div class="space-y-2" transition:fade={{ duration: 250 }}>
+                <div class="flex justify-between">
+                  <label for="claim-month" class="font-label-sm text-on-surface-variant text-xs font-semibold flex items-center">
+                    {t.expBidClaimMonth}
+                    <Tooltip id="bidder" language={language} mlText="ലേലത്തിൽ പങ്കെടുത്തു ചിട്ടി തുക കൈപ്പറ്റാൻ ഉദ്ദേശിക്കുന്ന മാസം." text="The month in which you plan to bid and claim the prize money." link="/#bidder" />
+                  </label>
+                  <span class="font-data-mono text-primary font-bold text-xs">{language === 'ml' ? 'മാസം' : 'Month'} {claimMonth}</span>
+                </div>
+                <input
+                  id="claim-month"
+                  type="range"
+                  min={currentMonth + 1}
+                  max={chitMonths}
+                  step="1"
+                  bind:value={claimMonth}
+                  class="w-full h-1"
+                />
+                <div class="flex justify-between text-[9px] text-outline font-bold">
+                  <span>{language === 'ml' ? 'മാസം' : 'Month'} {currentMonth + 1} ({language === 'ml' ? 'ഏറ്റവും അടുത്തത്' : 'Soonest'})</span>
+                  <span>{language === 'ml' ? 'മാസം' : 'Month'} {chitMonths} ({language === 'ml' ? 'അവസാനം' : 'End'})</span>
                 </div>
               </div>
             {:else}
@@ -854,7 +1102,7 @@
               <!-- Loan Amount -->
               <div class="space-y-3" transition:fade={{ duration: 250 }}>
                 <div class="flex justify-between items-center">
-                  <label for="amount-input" class="font-label-sm text-on-surface-variant text-sm font-medium">Loan Principal Amount</label>
+                  <label for="amount-input" class="font-label-sm text-on-surface-variant text-sm font-medium">{t.principalAmount}</label>
                   <span class="font-data-mono text-primary text-lg font-bold">{formatCurrency(amount)}</span>
                 </div>
                 <div class="flex gap-2">
@@ -887,7 +1135,7 @@
               <!-- Interest Rate -->
               <div class="space-y-3" transition:fade={{ duration: 250 }}>
                 <div class="flex justify-between items-center">
-                  <label for="rate-range" class="font-label-sm text-on-surface-variant text-sm font-medium">Interest Rate (% p.a.)</label>
+                  <label for="rate-range" class="font-label-sm text-on-surface-variant text-sm font-medium">{language === 'ml' ? 'പലിശ നിരക്ക് (% p.a.)' : 'Interest Rate (% p.a.)'}</label>
                   <span class="font-data-mono text-primary text-lg font-bold">{rate}%</span>
                 </div>
                 <input
@@ -909,8 +1157,8 @@
               <!-- Tenure -->
               <div class="space-y-3" transition:fade={{ duration: 250 }}>
                 <div class="flex justify-between items-center">
-                  <label for="tenure-range" class="font-label-sm text-on-surface-variant text-sm font-medium">Loan Tenure (Years)</label>
-                  <span class="font-data-mono text-primary text-lg font-bold">{tenure} Years</span>
+                  <label for="tenure-range" class="font-label-sm text-on-surface-variant text-sm font-medium">{language === 'ml' ? 'വായ്പ കാലാവധി (വർഷം)' : 'Loan Tenure (Years)'}</label>
+                  <span class="font-data-mono text-primary text-lg font-bold">{tenure} {language === 'ml' ? 'വർഷം' : 'Years'}</span>
                 </div>
                 <input
                   id="tenure-range"
@@ -922,9 +1170,9 @@
                   bind:value={tenure}
                 />
                 <div class="flex justify-between text-[10px] text-outline uppercase tracking-wider font-bold">
-                  <span>1 Year</span>
-                  <span>15 Years</span>
-                  <span>30 Years</span>
+                  <span>1 {language === 'ml' ? 'വർഷം' : 'Year'}</span>
+                  <span>15 {language === 'ml' ? 'വർഷം' : 'Years'}</span>
+                  <span>30 {language === 'ml' ? 'വർഷം' : 'Years'}</span>
                 </div>
               </div>
             {/if}
@@ -932,9 +1180,9 @@
             <div class="pt-2">
               <button
                 class="w-full py-3.5 rounded-xl shiny-btn text-on-primary font-bold text-base hover:opacity-95 transition-all active:scale-[0.98] cursor-pointer shadow-lg"
-                onclick={() => triggerToast(calculatorMode === 'substitution' ? "Chitty Substitution analysis compiled!" : "EMI calculations refreshed!")}
+                onclick={() => triggerToast(calculatorMode === 'substitution' ? (language === 'ml' ? 'ചിട്ടി സബ്സ്റ്റിറ്റ്യൂഷൻ വിശകലനം പൂർത്തിയായി!' : "Chitty Substitution analysis compiled!") : (language === 'ml' ? 'ഇ.എം.ഐ കണക്കുകൾ പുതുക്കി!' : "EMI calculations refreshed!"))}
               >
-                Re-calculate Scenario
+                {t.recalculate}
               </button>
             </div>
           </div>
@@ -945,22 +1193,38 @@
               <span class="material-symbols-outlined text-lg">info</span>
             </div>
             <div>
-              <p class="font-bold text-primary text-sm font-bold">
+              <p class="font-bold text-primary text-sm">
                 {#if calculatorMode === 'substitution'}
-                  Substitution Yield Details
+                  {t.tipTitleSub}
                 {:else}
-                  Amortization Overview
+                  {t.tipTitleEmi}
                 {/if}
               </p>
               <p class="text-xs text-on-surface-variant leading-relaxed mt-0.5 font-medium">
                 {#if calculatorMode === 'substitution'}
-                  IRR represents the true compound growth of your investments considering the net inflows.
+                  {t.tipDescSub}
                 {:else}
-                  Outstanding principal decreases faster in later years due to compound reduction.
+                  {t.tipDescEmi}
                 {/if}
               </p>
             </div>
           </div>
+
+          <!-- Chit Basics Link Card -->
+          <a href="/" class="glass-card p-5 rounded-2xl flex items-center gap-4 bg-secondary/5 border border-secondary/20 hover:border-secondary/40 duration-300 hover:-translate-y-0.5 cursor-pointer decoration-none">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-secondary/10 text-secondary shrink-0">
+              <span class="material-symbols-outlined text-lg">menu_book</span>
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-secondary text-sm">
+                {language === 'ml' ? 'ചിട്ടി വിവരങ്ങൾ പഠിക്കാം' : 'Learn Chit Basics'}
+              </p>
+              <p class="text-xs text-on-surface-variant leading-relaxed mt-0.5 font-medium">
+                {language === 'ml' ? 'ചിട്ടിയിലെ വിവിധ പദങ്ങളും പ്രവർത്തന രീതികളും ലളിതമായി മനസ്സിലാക്കൂ.' : 'Understand chit terms, auction rules, dividends, and safety checklists.'}
+              </p>
+            </div>
+            <span class="material-symbols-outlined text-secondary text-lg">arrow_forward</span>
+          </a>
         </div>
 
         <!-- Results Section (Right Dashboard) -->
@@ -969,11 +1233,11 @@
             <!-- Abstract background mesh glow -->
             <div class="absolute -top-24 -right-24 w-60 h-60 bg-primary/10 dark:bg-primary/5 blur-[90px] rounded-full"></div>
 
-            <h3 class="text-on-surface-variant font-label-sm uppercase tracking-[0.2em] mb-3 text-xs font-bold">
+            <h3 class="text-on-surface-variant font-label-sm uppercase tracking-[0.2em] mb-3 text-xs font-bold text-center">
               {#if calculatorMode === 'substitution'}
-                Compound Yield (Annualized IRR)
+                {t.compoundYield}
               {:else}
-                Estimated Monthly Installment (EMI)
+                {t.estimatedEmi}
               {/if}
             </h3>
 
@@ -1038,7 +1302,11 @@
 
                 <div class="absolute flex flex-col items-center">
                   <span class="text-[9px] text-outline font-bold uppercase tracking-widest">
-                    {#if calculatorMode === 'substitution'}Margin{:else}Ratio{/if}
+                    {#if calculatorMode === 'substitution'}
+                      {language === 'ml' ? 'അനുപാതം' : 'Margin'}
+                    {:else}
+                      {language === 'ml' ? 'അനുപാതം' : 'Ratio'}
+                    {/if}
                   </span>
                   <span class="text-base font-data-mono font-bold text-on-surface mt-0.5">
                     {Math.round($principalPercentTweened)}:{Math.round($interestPercentTweened)}
@@ -1050,11 +1318,24 @@
               <div class="space-y-4 text-left">
                 {#if calculatorMode === 'substitution'}
                   <!-- Chitty mode statistics -->
-                  <div class="space-y-1.5">
+                  <!-- Monthly Installment -->
+                  <div class="space-y-1.5 border-b border-outline-variant/10 dark:border-white/5 pb-2">
+                    <div class="flex justify-between items-center text-xs">
+                      <div class="flex items-center gap-1.5 font-bold text-on-surface-variant">
+                        <div class="w-2 h-2 rounded-full bg-outline"></div>
+                        <span>{t.monthlyInstallment}</span>
+                        <Tooltip id="monthlyInstallment" language={language} mlText={translations.ml.monthlyInstallmentTooltip} text={translations.en.monthlyInstallmentTooltip} link="/#monthly-installment" />
+                      </div>
+                      <span class="font-data-mono font-bold text-on-surface">{formatCurrency(chitM)}</span>
+                    </div>
+                  </div>
+
+                  <!-- Buy-in (Join Cost) -->
+                  <div class="space-y-1.5 pt-1">
                     <div class="flex justify-between items-center text-xs">
                       <div class="flex items-center gap-1.5 font-bold text-on-surface-variant">
                         <div class="w-2 h-2 rounded-full bg-primary animate-ping" style="animation-duration: 3s"></div>
-                        <span>Buy-in (Join Cost)</span>
+                        <span>{t.buyInJoinCost}</span>
                       </div>
                       <span class="font-data-mono font-bold text-on-surface">{formatCurrency($chitCostJoinTweened)}</span>
                     </div>
@@ -1064,7 +1345,7 @@
                     <div class="flex justify-between items-center text-xs">
                       <div class="flex items-center gap-1.5 font-bold text-on-surface-variant">
                         <div class="w-2 h-2 rounded-full bg-tertiary"></div>
-                        <span>Future Contributions</span>
+                        <span>{t.futureContributions}</span>
                       </div>
                       <span class="font-data-mono font-bold text-on-surface">{formatCurrency($chitCostFutureTweened)}</span>
                     </div>
@@ -1074,14 +1355,30 @@
                     <div class="flex justify-between items-center text-xs">
                       <div class="flex items-center gap-1.5 font-bold text-on-surface-variant">
                         <div class="w-2 h-2 rounded-full bg-secondary"></div>
-                        <span>Expected Profit</span>
+                        <span>{t.expectedProfit}</span>
+                        <Tooltip id="dividend" language={language} mlText={translations.ml.dividendTooltip} text={translations.en.dividendTooltip} link="/#dividend" />
                       </div>
                       <span class="font-data-mono font-bold text-secondary text-glow-green">{formatCurrency($chitNetProfitTweened)}</span>
                     </div>
                   </div>
 
+                  <!-- Foreman Commission -->
+                  <div class="space-y-1.5 border-t border-outline-variant/20 dark:border-white/5 pt-2">
+                    <div class="flex justify-between items-center text-xs">
+                      <div class="flex items-center gap-1.5 font-bold text-on-surface-variant">
+                        <div class="w-2 h-2 rounded-full bg-error/70"></div>
+                        <span>{language === 'ml' ? 'ഫോർമാൻ കമ്മീഷൻ (5%)' : 'Foreman Commission (5%)'}</span>
+                        <Tooltip id="foremanCommission" language={language} mlText={translations.ml.foremanCommissionTooltip} text={translations.en.foremanCommissionTooltip} link="/#foreman-commission" />
+                      </div>
+                      <span class="font-data-mono font-bold text-error">{formatCurrency(chitValue * 0.05)}</span>
+                    </div>
+                  </div>
+
                   <div class="pt-3 border-t border-outline-variant/30 dark:border-white/10 flex justify-between items-center">
-                    <span class="font-bold text-on-surface text-sm">Net Prize Payout</span>
+                    <span class="font-bold text-on-surface text-xs md:text-sm flex items-center">
+                      {t.netPrizePayout}
+                      <Tooltip id="prizeMoney" language={language} mlText={translations.ml.prizeMoneyTooltip} text={translations.en.prizeMoneyTooltip} link="/#prize-money" />
+                    </span>
                     <span class="text-primary font-bold text-lg text-glow-green">{formatCurrency($chitPrizeMoneyTweened)}</span>
                   </div>
                 {:else}
@@ -1090,7 +1387,7 @@
                     <div class="flex justify-between items-center text-xs">
                       <div class="flex items-center gap-1.5 font-bold text-on-surface-variant">
                         <div class="w-2 h-2 rounded-full bg-primary"></div>
-                        <span>Principal Amount</span>
+                        <span>{t.principalAmount}</span>
                       </div>
                       <span class="font-data-mono font-bold text-on-surface">{formatCurrency(amount)}</span>
                     </div>
@@ -1103,7 +1400,7 @@
                     <div class="flex justify-between items-center text-xs">
                       <div class="flex items-center gap-1.5 font-bold text-on-surface-variant">
                         <div class="w-2 h-2 rounded-full bg-secondary"></div>
-                        <span>Total Interest</span>
+                        <span>{t.totalInterest}</span>
                       </div>
                       <span class="font-data-mono font-bold text-on-surface">{formatCurrency($totalInterestTweened)}</span>
                     </div>
@@ -1113,7 +1410,7 @@
                   </div>
 
                   <div class="pt-3 border-t border-outline-variant/30 dark:border-white/10 flex justify-between items-center">
-                    <span class="font-bold text-on-surface text-sm">Total Repayment</span>
+                    <span class="font-bold text-on-surface text-sm">{t.totalRepayment}</span>
                     <span class="text-primary font-bold text-lg text-glow-green">{formatCurrency($totalPaymentTweened)}</span>
                   </div>
                 {/if}
@@ -1123,7 +1420,11 @@
             <!-- Graph Display Card -->
             <div class="w-full bg-outline-variant/10 dark:bg-black/10 rounded-2xl p-4 border border-outline-variant/30 dark:border-white/5 mt-6 shadow-inner relative overflow-hidden">
               <h4 class="text-[10px] text-outline font-bold uppercase tracking-wider mb-2">
-                {#if calculatorMode === 'substitution'}Substitution Cash Flow Milestone{:else}Outstanding Principal Curve{/if}
+                {#if calculatorMode === 'substitution'}
+                  {t.cashFlowMilestone}
+                {:else}
+                  {t.outstandingPrincipal}
+                {/if}
               </h4>
               
               {#if calculatorMode === 'substitution'}
@@ -1137,7 +1438,7 @@
                   
                   <!-- Zero line (Break even) -->
                   <line x1="15" y1={chittyChartPath.zeroY} x2="405" y2={chittyChartPath.zeroY} stroke="var(--color-outline-variant)" stroke-opacity="0.35" stroke-dasharray="4,4" />
-                  <text x="20" y={chittyChartPath.zeroY - 4} fill="var(--color-outline)" font-size="8" font-weight="bold">Break Even</text>
+                  <text x="20" y={chittyChartPath.zeroY - 4} fill="var(--color-outline)" font-size="8" font-weight="bold">{t.breakEven}</text>
 
                   <path d={chittyChartPath.areaPath} fill="url(#chitAreaGrad)" />
                   <path d={chittyChartPath.linePath} fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" class="chart-glow" />
@@ -1182,34 +1483,34 @@
             <div class="mt-6 w-full">
               <button
                 class="w-full py-3.5 border border-primary/30 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/5 transition-all flex items-center justify-center gap-2 text-primary font-bold cursor-pointer text-sm shadow-md active:scale-[0.99]"
-                onclick={handleApply}
+                onclick={() => triggerToast(language === 'ml' ? "അംഗത്വ യോഗ്യതാ പോർട്ടലിലേക്ക് റീഡയറക്ട് ചെയ്യുന്നു..." : "Redirecting to subscriber eligibility portal...")}
               >
                 <span class="material-symbols-outlined text-base">bolt</span>
-                Request Subscriber Enrolment
+                {t.requestEnrolment}
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Amortization Schedule Section (EMI mode only) -->
-      {#if calculatorMode === 'emi'}
+      <!-- Amortization / Cash Flow Breakdown Section (Always shown for both modes!) -->
+      {#if calculatorMode === 'emi' || calculatorMode === 'substitution'}
       <section class="space-y-5">
         <div class="flex justify-between items-end flex-wrap gap-4 border-b border-outline-variant/30 pb-3">
           <div>
             <h2 class="font-headline-md text-on-surface text-xl font-bold tracking-tight flex items-center gap-2">
               <span class="material-symbols-outlined text-primary">payments</span>
               {#if calculatorMode === 'substitution'}
-                Chitty Cash Flow Breakdown
+                {t.cashFlowMilestone}
               {:else}
-                Amortization Schedule
+                {language === 'ml' ? 'റീപേമെന്റ് ചാർട്ട്' : 'Amortization Schedule'}
               {/if}
             </h2>
             <p class="text-on-surface-variant text-xs mt-0.5 leading-relaxed font-semibold">
               {#if calculatorMode === 'substitution'}
-                Month-by-month cash balances. Green indicates positive gains post prize claim.
+                {language === 'ml' ? 'പ്രതിമാസ പണമിടപാടുകൾ. ലേലം വിളിച്ചതിന് ശേഷമുള്ള ലാഭം പച്ച നിറത്തിൽ കാണിച്ചിരിക്കുന്നു.' : 'Month-by-month cash balances. Green indicates positive gains post prize claim.'}
               {:else}
-                Year-by-year payment schedule. Click any year row to view individual monthly details.
+                {language === 'ml' ? 'വർഷം തിരിച്ചുള്ള അടവ് വിവരങ്ങൾ. ഓരോ മാസത്തെയും വിവരങ്ങൾ കാണാൻ വർഷത്തിൽ ക്ലിക്ക് ചെയ്യുക.' : 'Year-by-year payment schedule. Click any year row to view individual monthly details.'}
               {/if}
             </p>
           </div>
@@ -1220,7 +1521,7 @@
               <span class="material-symbols-outlined text-outline text-base">search</span>
               <input
                 class="bg-transparent border-none focus:outline-none focus:ring-0 text-xs text-on-surface placeholder:text-outline-variant w-full p-0"
-                placeholder="Search schedule..."
+                placeholder={t.searchSchedule}
                 type="text"
                 bind:value={searchTerm}
               />
@@ -1228,10 +1529,10 @@
             
             <button
               class="flex items-center gap-1.5 px-3 py-2 bg-outline-variant/15 dark:bg-white/5 rounded-xl border border-outline-variant/30 dark:border-white/10 hover:bg-outline-variant/25 dark:hover:bg-white/10 transition-all text-xs font-semibold cursor-pointer shrink-0"
-              onclick={handleExport}
+              onclick={() => triggerToast(language === 'ml' ? 'റിപ്പോർട്ട് ഡൗൺലോഡ് ചെയ്യുന്നു...' : 'Detailed amortization schedule exported successfully!')}
             >
               <span class="material-symbols-outlined text-xs">download</span>
-              Export PDF
+              {t.downloadPdf}
             </button>
           </div>
         </div>
@@ -1242,17 +1543,17 @@
               <thead class="sticky top-0 bg-outline-variant/80 dark:bg-[#12191b]/90 backdrop-blur-md z-20">
                 <tr class="text-on-surface-variant text-[10px] uppercase tracking-wider font-bold border-b border-outline-variant/30 dark:border-white/10">
                   {#if calculatorMode === 'substitution'}
-                    <th class="px-6 py-4">Month Index</th>
-                    <th class="px-6 py-4">Transaction / Milestone</th>
-                    <th class="px-6 py-4">Cash Outflow/Inflow</th>
-                    <th class="px-6 py-4">Cumulative Position</th>
-                    <th class="px-6 py-4">Details</th>
+                    <th class="px-6 py-4">{t.monthIndex}</th>
+                    <th class="px-6 py-4">{t.transactionMilestone}</th>
+                    <th class="px-6 py-4">{t.cashFlow}</th>
+                    <th class="px-6 py-4">{t.cumulativePosition}</th>
+                    <th class="px-6 py-4">{t.details}</th>
                   {:else}
-                    <th class="px-6 py-4">Year</th>
-                    <th class="px-6 py-4">Opening Balance</th>
-                    <th class="px-6 py-4">Interest Paid</th>
-                    <th class="px-6 py-4">Principal Paid</th>
-                    <th class="px-6 py-4 text-primary">Closing Balance</th>
+                    <th class="px-6 py-4">{t.year}</th>
+                    <th class="px-6 py-4">{t.openingBalance}</th>
+                    <th class="px-6 py-4">{t.interestPaid}</th>
+                    <th class="px-6 py-4">{t.principalPaid}</th>
+                    <th class="px-6 py-4 text-primary">{t.closingBalance}</th>
                   {/if}
                 </tr>
               </thead>
@@ -1265,7 +1566,7 @@
                     >
                       <td class="px-6 py-4 font-bold text-on-surface flex items-center gap-1">
                         <span class="material-symbols-outlined text-secondary text-sm transition-transform duration-200 {expandedRows[`chit-${row.monthText}`] ? 'rotate-90' : ''}">chevron_right</span>
-                        {row.monthText}
+                        {row.monthText.replace("Month", language === 'ml' ? 'മാസം' : 'Month')}
                       </td>
                       <td class="px-6 py-4 font-bold text-on-surface">{row.description}</td>
                       <td class="px-6 py-4 font-bold {row.amount >= 0 ? 'text-primary text-glow-green' : 'text-error'}">
@@ -1279,17 +1580,17 @@
                     {#if expandedRows[`chit-${row.monthText}`]}
                       <tr transition:slide={{ duration: 200 }}>
                         <td colspan="5" class="bg-outline-variant/5 dark:bg-black/25 p-4 border-l-2 border-secondary">
-                          <div class="text-[10px] text-outline font-bold uppercase tracking-wider mb-1">Transaction Details</div>
+                          <div class="text-[10px] text-outline font-bold uppercase tracking-wider mb-1">{language === 'ml' ? 'ഇടപാട് വിവരങ്ങൾ' : 'Transaction Details'}</div>
                           <p class="text-on-surface-variant leading-relaxed text-xs font-semibold">{row.details}</p>
                           <div class="mt-2 text-[10px] text-on-surface-variant flex gap-4 font-bold">
-                            <span>Type: <strong class="uppercase text-secondary">{row.type}</strong></span>
-                            <span>Rolling Position: <strong>{formatCurrency(row.cumulative)}</strong></span>
+                            <span>{language === 'ml' ? 'തരം: ' : 'Type: '} <strong class="uppercase text-secondary">{row.type}</strong></span>
+                            <span>{language === 'ml' ? 'ബാക്കി തുക: ' : 'Rolling Position: '} <strong>{formatCurrency(row.cumulative)}</strong></span>
                           </div>
                         </td>
                       </tr>
                     {/if}
                   {:else}
-                    <tr class="text-on-surface-variant"><td colspan="5" class="text-center py-6 text-outline">No schedule items found matching search filters.</td></tr>
+                    <tr class="text-on-surface-variant"><td colspan="5" class="text-center py-6 text-outline">{language === 'ml' ? 'തിരച്ചിലിൽ വിവരങ്ങൾ ഒന്നും ലഭിച്ചില്ല.' : 'No schedule items found matching search filters.'}</td></tr>
                   {/each}
                 {:else}
                   {#each paginatedEmiRows as row}
@@ -1299,7 +1600,7 @@
                     >
                       <td class="px-6 py-4 font-bold text-on-surface flex items-center gap-1">
                         <span class="material-symbols-outlined text-primary text-sm transition-transform duration-200 {expandedRows[`year-${row.year}`] ? 'rotate-90' : ''}">chevron_right</span>
-                        Year {row.year}
+                        {language === 'ml' ? 'വർഷം' : 'Year'} {row.year}
                       </td>
                       <td class="px-6 py-4 text-on-surface-variant">{formatCurrency(row.openingBalance)}</td>
                       <td class="px-6 py-4 text-error font-semibold">{formatCurrency(row.interestPaid)}</td>
@@ -1310,17 +1611,17 @@
                       <tr transition:slide={{ duration: 250 }}>
                         <td colspan="5" class="bg-outline-variant/5 dark:bg-black/25 p-0">
                           <div class="px-8 py-3 space-y-2 border-l-2 border-primary">
-                            <div class="text-[10px] text-outline font-bold uppercase tracking-wider mb-2">Monthly Breakdown (Year {row.year})</div>
+                            <div class="text-[10px] text-outline font-bold uppercase tracking-wider mb-2">{t.monthlyBreakdown} ({language === 'ml' ? 'വർഷം' : 'Year'} {row.year})</div>
                             <div class="grid grid-cols-5 text-[10px] text-on-surface-variant font-bold pb-1 border-b border-outline-variant/20 dark:border-white/5">
-                              <span>Month</span>
-                              <span>Opening Balance</span>
-                              <span>Interest Portion</span>
-                              <span>Principal Portion</span>
-                              <span>Closing Balance</span>
+                              <span>{t.month}</span>
+                              <span>{t.openingBalance}</span>
+                              <span>{language === 'ml' ? 'പലിശ ഭാഗം' : 'Interest Portion'}</span>
+                              <span>{language === 'ml' ? 'അസ്സൽ ഭാഗം' : 'Principal Portion'}</span>
+                              <span>{t.closingBalance}</span>
                             </div>
                             {#each row.months as m}
                               <div class="grid grid-cols-5 text-[11px] text-on-surface-variant py-1 border-b border-outline-variant/5 dark:border-white/5 last:border-b-0 font-medium">
-                                <span class="font-bold text-on-surface">Month {m.month}</span>
+                                <span class="font-bold text-on-surface">{language === 'ml' ? 'മാസം' : 'Month'} {m.month}</span>
                                 <span>{formatCurrency(m.openingBalance)}</span>
                                 <span class="text-error">{formatCurrency(m.interestPaid)}</span>
                                 <span class="text-primary">{formatCurrency(m.principalPaid)}</span>
@@ -1332,7 +1633,7 @@
                       </tr>
                     {/if}
                   {:else}
-                    <tr class="text-on-surface-variant"><td colspan="5" class="text-center py-6 text-outline">No schedule items found matching search filters.</td></tr>
+                    <tr class="text-on-surface-variant"><td colspan="5" class="text-center py-6 text-outline">{language === 'ml' ? 'തിരച്ചിലിൽ വിവരങ്ങൾ ഒന്നും ലഭിച്ചില്ല.' : 'No schedule items found matching search filters.'}</td></tr>
                   {/each}
                 {/if}
               </tbody>
@@ -1342,21 +1643,23 @@
           <!-- Pagination Bar -->
           {#if totalPages > 1}
             <div class="px-6 py-3.5 bg-outline-variant/20 dark:bg-black/20 border-t border-outline-variant/30 dark:border-white/10 flex justify-between items-center">
-              <span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wide">Page {currentPage} of {totalPages}</span>
+              <span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wide">
+                {language === 'ml' ? 'പേജ്' : 'Page'} {currentPage} {language === 'ml' ? 'ആകെ' : 'of'} {totalPages}
+              </span>
               <div class="flex gap-2">
                 <button
                   class="px-3 py-1.5 rounded-lg bg-outline-variant/15 dark:bg-white/5 border border-outline-variant/30 dark:border-white/10 text-xs font-bold hover:bg-outline-variant/25 dark:hover:bg-white/10 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed text-on-surface"
                   disabled={currentPage === 1}
                   onclick={() => currentPage -= 1}
                 >
-                  Previous
+                  {t.previous}
                 </button>
                 <button
                   class="px-3 py-1.5 rounded-lg bg-outline-variant/15 dark:bg-white/5 border border-outline-variant/30 dark:border-white/10 text-xs font-bold hover:bg-outline-variant/25 dark:hover:bg-white/10 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed text-on-surface"
                   disabled={currentPage === totalPages}
                   onclick={() => currentPage += 1}
                 >
-                  Next
+                  {t.next}
                 </button>
               </div>
             </div>
@@ -1366,10 +1669,22 @@
       {/if}
     </div>
 
+    <!-- Educational Disclaimer Section -->
+    <div class="max-w-7xl mx-auto w-full px-6 lg:px-10 pb-8 text-center">
+      <div class="p-5 rounded-2xl bg-outline-variant/5 dark:bg-white/5 border border-outline-variant/20 dark:border-white/10 text-xs text-on-surface-variant leading-relaxed max-w-4xl mx-auto font-medium">
+        <span class="font-bold text-primary block mb-1">
+          {language === 'ml' ? 'ഡിസ്‌ക്ലൈമർ / മുന്നറിയിപ്പ്' : 'Disclaimer'}
+        </span>
+        {language === 'ml' 
+          ? 'ഈ ആപ്ലിക്കേഷൻ വിദ്യാഭ്യാസപരവും വിവരശേഖരണപരവുമായ ആവശ്യങ്ങൾക്ക് മാത്രമുള്ളതാണ്. യഥാർത്ഥ ചിട്ടി വ്യവസ്ഥകൾ, ലേല നിയമങ്ങൾ, ചാർജുകൾ, ഡിവിഡന്റുകൾ, ജാമ്യ വ്യവസ്ഥകൾ എന്നിവ ഓരോ ചിട്ടി കരാറുകൾക്കും ബാധകമായ നിയമങ്ങൾക്കും അനുസരിച്ച് വ്യത്യാസപ്പെടാം.'
+          : 'This application is for educational and informational purposes only. Actual chit terms, auction rules, charges, dividends, security requirements and other conditions may vary according to the specific chit agreement and applicable laws/regulations.'}
+      </div>
+    </div>
+
     <!-- Footer -->
     <footer class="mt-auto py-8 border-t border-outline-variant/20 dark:border-white/5 text-center text-outline-variant text-[11px] font-medium leading-relaxed bg-background/20 backdrop-blur-sm relative z-10">
-      <p>© 2026 Substitution Chitty & Loan Calculator Dashboard.</p>
-      <p class="mt-1 opacity-70">Powered by Svelte 5 and Premium Glassmorphism shift aesthetics.</p>
+      <p>© 2026 {language === 'ml' ? 'സബ്സ്റ്റിറ്റ്യൂഷൻ ചിട്ടി & ലോൺ കാൽക്കുലേറ്റർ ഡാഷ്‌ബോർഡ്' : 'Substitution Chitty & Loan Calculator Dashboard'}.</p>
+      <p class="mt-1 opacity-70">{language === 'ml' ? 'Svelte 5-ലും പ്രീമിയം ഗ്ലാസ്മോർഫിസം രൂപകൽപ്പനയിലും നിർമ്മിച്ചത്' : 'Powered by Svelte 5 and Premium Glassmorphism shift aesthetics'}.</p>
     </footer>
   </main>
 </div>

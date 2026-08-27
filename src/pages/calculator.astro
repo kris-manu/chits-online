@@ -1,5 +1,5 @@
 ---
-import ChitBasicsPage from '../components/chit/ChitBasicsPage.svelte';
+import EmiCalculator from '../components/EmiCalculator.svelte';
 import '../styles/global.css';
 ---
 
@@ -11,9 +11,9 @@ import '../styles/global.css';
 		<meta name="generator" content={Astro.generator} />
 		
 		<!-- SEO Meta Tags -->
-		<title>Chit Fund Guide – Chit Basics, Terms & How Chits Work</title>
-		<meta name="description" content="Bilingual (മലയാളം/English) educational guide explaining what a chit fund is, how chits work, and essential terms like dividend, discount, prize money, security, and foreman commission." />
-		<meta name="keywords" content="Chit Fund, Chitty, Chit Basics, Chit Terms, Dividend, Discount, Prize Money, Foreman Commission, Malayalam, English, KSFE, substitution, ചിട്ടി പദങ്ങൾ" />
+		<title>Substitution Chitty & Loan EMI Calculator - Premium Glassmorphic Dashboard</title>
+		<meta name="description" content="Bilingual (മലയാളം/English) Chit Fund Calculator & educational guide. Calculate monthly loan EMIs or analyze Chit Fund (Chitty) substitution yield, compound interest IRR, and browse chit basics." />
+		<meta name="keywords" content="EMI Calculator, Chit Fund, Chitty, Substitution Chitty, loan calculator, glassmorphism, responsive calculator, Svelte 5, Astro, Chit Basics, ചിട്ടി നിയമങ്ങൾ" />
 		
 		<!-- Google Fonts & Material Icons -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -21,6 +21,6 @@ import '../styles/global.css';
 		<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&family=Manjari:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 	</head>
 	<body class="bg-background text-on-surface transition-colors duration-500">
-		<ChitBasicsPage client:load />
+		<EmiCalculator client:load />
 	</body>
 </html>
