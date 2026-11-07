@@ -604,15 +604,17 @@
     let height = (canvas.height = window.innerHeight);
 
     let particles = [];
-    const particleCount = 40;
+    const particleCount = 48;
 
     class Particle {
       constructor() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.35;
-        this.vy = (Math.random() - 0.5) * 0.35;
-        this.radius = Math.random() * 2 + 1;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.radius = Math.random() * 2.2 + 1;
+        // Dual Emerald & Royal Navy Palette
+        this.isNavy = Math.random() > 0.45;
       }
 
       update() {
@@ -626,10 +628,17 @@
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle =
-          theme === "dark"
-            ? "rgba(16, 185, 129, 0.25)"
-            : "rgba(0, 133, 86, 0.15)";
+        if (this.isNavy) {
+          ctx.fillStyle =
+            theme === "dark"
+              ? "rgba(74, 159, 245, 0.45)"
+              : "rgba(15, 44, 89, 0.28)";
+        } else {
+          ctx.fillStyle =
+            theme === "dark"
+              ? "rgba(16, 232, 145, 0.45)"
+              : "rgba(0, 143, 88, 0.28)";
+        }
         ctx.fill();
       }
     }
@@ -666,7 +675,7 @@
         p.draw();
       });
 
-      // Connect particles
+      // Connect particles with dual Emerald & Royal Navy lines
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -677,18 +686,19 @@
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            const alpha = (1 - dist / 130) * 0.08;
+            const alpha = (1 - dist / 130) * 0.12;
+            const useNavy = particles[i].isNavy || particles[j].isNavy;
             ctx.strokeStyle =
               theme === "dark"
-                ? `rgba(16, 185, 129, ${alpha})`
-                : `rgba(0, 133, 86, ${alpha})`;
+                ? (useNavy ? `rgba(74, 159, 245, ${alpha})` : `rgba(16, 232, 145, ${alpha})`)
+                : (useNavy ? `rgba(15, 44, 89, ${alpha})` : `rgba(0, 143, 88, ${alpha})`);
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }
         }
 
-        // Mouse attraction
-        if (mouse.x !== null) {
+        // Interactive Mouse Attraction & Constellation Effect
+        if (mouse.x !== null && mouse.y !== null) {
           const dx = particles[i].x - mouse.x;
           const dy = particles[i].y - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -696,14 +706,15 @@
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(mouse.x, mouse.y);
-            const alpha = (1 - dist / 180) * 0.12;
+            const alpha = (1 - dist / 180) * 0.22;
             ctx.strokeStyle =
               theme === "dark"
-                ? `rgba(16, 185, 129, ${alpha})`
-                : `rgba(0, 133, 86, ${alpha})`;
+                ? (particles[i].isNavy ? `rgba(74, 159, 245, ${alpha})` : `rgba(16, 232, 145, ${alpha})`)
+                : (particles[i].isNavy ? `rgba(15, 44, 89, ${alpha})` : `rgba(0, 143, 88, ${alpha})`);
             ctx.lineWidth = 0.8;
             ctx.stroke();
 
+            // Gentle spring pull toward cursor
             particles[i].x -= dx * 0.008;
             particles[i].y -= dy * 0.008;
           }
@@ -770,10 +781,13 @@
   <!-- BACKGROUND DECOR GLOWS -->
   <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
     <div
-      class="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/10 dark:bg-primary/5 blur-[120px] animate-pulse-glow"
+      class="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/15 dark:bg-primary/10 blur-[130px] animate-pulse-glow"
     ></div>
     <div
-      class="absolute bottom-[-10%] left-[-5%] w-[40vw] h-[40vw] rounded-full bg-secondary/15 dark:bg-secondary/5 blur-[100px] animate-pulse-glow animate-float-slow"
+      class="absolute bottom-[-10%] left-[-5%] w-[45vw] h-[45vw] rounded-full bg-secondary/20 dark:bg-secondary/10 blur-[120px] animate-pulse-glow animate-float-slow"
+    ></div>
+    <div
+      class="absolute top-[45%] left-[-10%] w-[35vw] h-[35vw] rounded-full bg-secondary/10 dark:bg-secondary/5 blur-[120px] animate-aurora pointer-events-none"
     ></div>
   </div>
 
@@ -781,9 +795,9 @@
   {#if showToast}
     <div
       transition:fly={{ y: 20, duration: 300 }}
-      class="fixed bottom-6 right-6 z-50 glass-card p-4 rounded-2xl shadow-xl border border-primary/30 flex items-center gap-3"
+      class="fixed bottom-6 right-6 z-50 glass-card p-4 rounded-2xl shadow-xl border border-secondary/40 flex items-center gap-3 backdrop-blur-xl"
     >
-      <div class="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-secondary animate-ping"></div>
       <span class="text-sm font-semibold text-on-surface">{toastMessage}</span>
     </div>
   {/if}
@@ -792,11 +806,11 @@
   <main class="min-h-screen flex flex-col relative z-10">
     <!-- Top Bar -->
     <header
-      class="flex justify-between items-center w-full px-4 lg:px-12 h-18 sticky top-0 z-40 bg-background/45 backdrop-blur-3xl border-b border-outline-variant/30"
+      class="flex justify-between items-center w-full px-4 lg:px-12 h-18 sticky top-0 z-40 bg-background/55 backdrop-blur-3xl border-b border-outline-variant/30"
     >
       <div class="flex items-center gap-3">
         <div
-          class="w-9 h-9 rounded-xl shiny-btn flex items-center justify-center text-on-primary shadow-md"
+          class="w-9 h-9 rounded-xl shiny-btn flex items-center justify-center text-on-primary shadow-md hover:scale-105 transition-transform"
         >
           <span class="material-symbols-outlined font-bold text-lg"
             >account_balance</span
@@ -807,10 +821,17 @@
         </span>
         
         <a 
-          href="/" 
-          class="ml-2 md:ml-4 px-2.5 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 hover:border-primary/40 text-[10px] md:text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+          href="/chit-calculator" 
+          class="ml-2 md:ml-4 px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/25 hover:border-primary/50 text-[10px] md:text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm hover:scale-105 active:scale-95 group"
         >
-          <span class="material-symbols-outlined text-xs md:text-sm font-bold">menu_book</span>
+          <span class="material-symbols-outlined text-xs md:text-sm font-bold group-hover:rotate-12 transition-transform">insights</span>
+          <span>{language === 'ml' ? 'ചിട്ടി പ്രവർത്തനം' : 'Chit Working'}</span>
+        </a>
+        <a 
+          href="/" 
+          class="ml-1 md:ml-2 px-3 py-1.5 rounded-xl bg-secondary/10 hover:bg-secondary/20 text-secondary border border-secondary/25 hover:border-secondary/50 text-[10px] md:text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm hover:scale-105 active:scale-95 group"
+        >
+          <span class="material-symbols-outlined text-xs md:text-sm font-bold group-hover:rotate-12 transition-transform">menu_book</span>
           <span>{language === 'ml' ? 'ചിട്ടി പദങ്ങൾ' : 'Chit Basics'}</span>
         </a>
       </div>
@@ -820,7 +841,7 @@
           <!-- Language Selector -->
           <div class="flex p-0.5 bg-outline-variant/15 dark:bg-white/5 rounded-xl border border-outline-variant/30 dark:border-white/10 relative overflow-hidden w-28 md:w-32 shadow-inner shrink-0">
             <div 
-              class="absolute top-0.5 bottom-0.5 left-0.5 rounded-lg bg-primary transition-all duration-300 ease-out z-0 shadow"
+              class="absolute top-0.5 bottom-0.5 left-0.5 rounded-lg bg-gradient-to-r from-primary to-secondary transition-all duration-300 ease-out z-0 shadow"
               style="width: calc(50% - 2px); transform: translateX({language === 'ml' ? '0%' : '100%'});"
             ></div>
             <button 
@@ -849,7 +870,7 @@
 
           <!-- Dark/Light Theme Switcher -->
           <button
-            class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-outline-variant/25 dark:bg-white/5 border border-outline-variant/30 dark:border-white/10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-all cursor-pointer active:scale-95 shadow-sm"
+            class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-outline-variant/25 dark:bg-white/5 border border-outline-variant/30 dark:border-white/10 flex items-center justify-center text-on-surface-variant hover:text-secondary hover:border-secondary/40 transition-all cursor-pointer hover:scale-105 active:scale-95 shadow-sm"
             onclick={() => {
               theme = theme === 'dark' ? 'light' : 'dark';
               triggerToast(language === 'ml' ? `തീം ${theme === 'dark' ? 'ഡാർക്ക്' : 'ലൈറ്റ്'} മോഡിലേക്ക് മാറ്റി` : `Theme switched to ${theme} mode`);
@@ -857,9 +878,9 @@
             aria-label="Toggle Theme"
           >
             {#if theme === 'dark'}
-              <span class="material-symbols-outlined text-sm md:text-lg animate-float">light_mode</span>
+              <span class="material-symbols-outlined text-sm md:text-lg animate-float text-secondary">light_mode</span>
             {:else}
-              <span class="material-symbols-outlined text-sm md:text-lg animate-float">dark_mode</span>
+              <span class="material-symbols-outlined text-sm md:text-lg animate-float text-primary">dark_mode</span>
             {/if}
           </button>
 
@@ -884,10 +905,36 @@
     <!-- Dashboard Body -->
     <div class="p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-8">
       
+      <!-- Link to Chit Lifecycle / Working Calculator -->
+      <a 
+        href="/chit-calculator" 
+        class="block p-4 rounded-2xl bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/5 border border-primary/25 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-[1.01] group relative overflow-hidden"
+      >
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold shadow group-hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-xl">query_stats</span>
+            </div>
+            <div>
+              <div class="text-[11px] font-bold text-primary tracking-wide uppercase">
+                {language === 'ml' ? 'ചിട്ടി പ്രവർത്തനം & ഗ്രാഫ്' : 'CHIT LIFECYCLE & GRAPH'}
+              </div>
+              <div class="text-sm md:text-base font-bold text-on-surface">
+                {language === 'ml' ? 'മാസങ്ങളും തുകയും നൽകി ലേലവും ഡിവിഡന്റും ഗ്രാഫിലൂടെ കാണുക' : 'Explore Months, Chit Amount, Auctions & Dividends with Interactive Visual Graphs'}
+              </div>
+            </div>
+          </div>
+          <div class="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-on-primary text-xs font-bold shadow group-hover:translate-x-1 transition-transform shrink-0">
+            <span>{language === 'ml' ? 'തുടങ്ങുക' : 'Open Calculator'}</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </div>
+        </div>
+      </a>
+
       <!-- CALCULATOR MODE SELECTOR (Chitty Substitution First) -->
       <div class="flex p-1.5 bg-outline-variant/15 dark:bg-black/20 rounded-2xl border border-outline-variant/30 dark:border-white/10 backdrop-blur-md relative overflow-hidden max-w-md mx-auto shadow-inner">
         <div 
-          class="absolute top-1.5 bottom-1.5 left-1.5 rounded-xl bg-primary transition-all duration-300 ease-out z-0 shadow-md"
+          class="absolute top-1.5 bottom-1.5 left-1.5 rounded-xl bg-gradient-to-r from-primary to-secondary transition-all duration-300 ease-out z-0 shadow-lg"
           style="width: calc(50% - 6px); transform: translateX({calculatorMode === 'substitution' ? '0%' : '100%'});"
         ></div>
         <button 
@@ -960,7 +1007,7 @@
                   {#each [100000, 500000, 1000000, 2500000, 5000000] as opt}
                     <button
                       type="button"
-                      class="px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-wide uppercase border transition-all cursor-pointer {chitValue === opt ? 'bg-primary/20 border-primary text-primary' : 'bg-transparent border-outline-variant/30 text-on-surface-variant hover:border-primary/50'}"
+                      class="px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-wide uppercase border transition-all cursor-pointer preset-badge-hover {chitValue === opt ? 'bg-primary/20 border-primary text-primary shadow-sm' : 'bg-transparent border-outline-variant/30 text-on-surface-variant hover:border-secondary hover:text-secondary'}"
                       onclick={() => chitValue = opt}
                     >
                       {formatCurrency(opt)}
@@ -1123,7 +1170,7 @@
                   {#each config.options as opt}
                     <button
                       type="button"
-                      class="px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-wide uppercase border transition-all cursor-pointer {amount === opt ? 'bg-primary/20 border-primary text-primary' : 'bg-transparent border-outline-variant/30 text-on-surface-variant hover:border-primary/50'}"
+                      class="px-2.5 py-1 rounded-lg text-[10px] font-bold tracking-wide uppercase border transition-all cursor-pointer preset-badge-hover {amount === opt ? 'bg-primary/20 border-primary text-primary shadow-sm' : 'bg-transparent border-outline-variant/30 text-on-surface-variant hover:border-secondary hover:text-secondary'}"
                       onclick={() => amount = opt}
                     >
                       {formatCurrency(opt)}
@@ -1188,8 +1235,8 @@
           </div>
 
           <!-- Quick Tip Card -->
-          <div class="glass-card p-5 rounded-2xl flex items-center gap-4 bg-primary/5 border border-primary/20 hover:border-primary/40 duration-300">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-primary/10 text-primary shrink-0">
+          <div class="glass-card interactive-card p-5 rounded-2xl flex items-center gap-4 bg-primary/5 border border-primary/25 hover:border-primary/50 duration-300 group">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-primary/10 text-primary shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-transform">
               <span class="material-symbols-outlined text-lg">info</span>
             </div>
             <div>
@@ -1211,8 +1258,8 @@
           </div>
 
           <!-- Chit Basics Link Card -->
-          <a href="/" class="glass-card p-5 rounded-2xl flex items-center gap-4 bg-secondary/5 border border-secondary/20 hover:border-secondary/40 duration-300 hover:-translate-y-0.5 cursor-pointer decoration-none">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-secondary/10 text-secondary shrink-0">
+          <a href="/" class="glass-card interactive-card p-5 rounded-2xl flex items-center gap-4 bg-secondary/5 border border-secondary/25 hover:border-secondary/50 duration-300 cursor-pointer decoration-none group">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-secondary/15 text-secondary shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-transform">
               <span class="material-symbols-outlined text-lg">menu_book</span>
             </div>
             <div class="flex-1">
@@ -1223,15 +1270,16 @@
                 {language === 'ml' ? 'ചിട്ടിയിലെ വിവിധ പദങ്ങളും പ്രവർത്തന രീതികളും ലളിതമായി മനസ്സിലാക്കൂ.' : 'Understand chit terms, auction rules, dividends, and safety checklists.'}
               </p>
             </div>
-            <span class="material-symbols-outlined text-secondary text-lg">arrow_forward</span>
+            <span class="material-symbols-outlined text-secondary text-lg group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
           </a>
         </div>
 
         <!-- Results Section (Right Dashboard) -->
         <div class="lg:col-span-6 space-y-6">
-          <div class="glass-card p-8 lg:p-10 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
-            <!-- Abstract background mesh glow -->
-            <div class="absolute -top-24 -right-24 w-60 h-60 bg-primary/10 dark:bg-primary/5 blur-[90px] rounded-full"></div>
+          <div class="glass-card interactive-card p-8 lg:p-10 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
+            <!-- Dual Green & Blue background mesh glow -->
+            <div class="absolute -top-24 -right-24 w-60 h-60 bg-primary/15 dark:bg-primary/10 blur-[90px] rounded-full"></div>
+            <div class="absolute -bottom-24 -left-24 w-60 h-60 bg-secondary/20 dark:bg-secondary/10 blur-[90px] rounded-full"></div>
 
             <h3 class="text-on-surface-variant font-label-sm uppercase tracking-[0.2em] mb-3 text-xs font-bold text-center">
               {#if calculatorMode === 'substitution'}
@@ -1482,10 +1530,10 @@
 
             <div class="mt-6 w-full">
               <button
-                class="w-full py-3.5 border border-primary/30 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/5 transition-all flex items-center justify-center gap-2 text-primary font-bold cursor-pointer text-sm shadow-md active:scale-[0.99]"
+                class="w-full py-3.5 border border-secondary/40 rounded-xl hover:bg-secondary/15 dark:hover:bg-secondary/10 transition-all flex items-center justify-center gap-2 text-secondary font-bold cursor-pointer text-sm shadow-md hover:scale-[1.01] active:scale-[0.98] group"
                 onclick={() => triggerToast(language === 'ml' ? "അംഗത്വ യോഗ്യതാ പോർട്ടലിലേക്ക് റീഡയറക്ട് ചെയ്യുന്നു..." : "Redirecting to subscriber eligibility portal...")}
               >
-                <span class="material-symbols-outlined text-base">bolt</span>
+                <span class="material-symbols-outlined text-base text-secondary group-hover:scale-125 group-hover:rotate-12 transition-transform">bolt</span>
                 {t.requestEnrolment}
               </button>
             </div>
@@ -1561,7 +1609,7 @@
                 {#if calculatorMode === 'substitution'}
                   {#each paginatedChitRows as row}
                     <tr 
-                      class="hover:bg-outline-variant/10 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                      class="hover:bg-secondary/10 dark:hover:bg-secondary/15 transition-all cursor-pointer"
                       onclick={() => toggleRow(`chit-${row.monthText}`)}
                     >
                       <td class="px-6 py-4 font-bold text-on-surface flex items-center gap-1">
@@ -1595,7 +1643,7 @@
                 {:else}
                   {#each paginatedEmiRows as row}
                     <tr 
-                      class="hover:bg-outline-variant/10 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                      class="hover:bg-secondary/10 dark:hover:bg-secondary/15 transition-all cursor-pointer"
                       onclick={() => toggleRow(`year-${row.year}`)}
                     >
                       <td class="px-6 py-4 font-bold text-on-surface flex items-center gap-1">

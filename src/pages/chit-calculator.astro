@@ -1,0 +1,27 @@
+---
+import ChitWorkingCalculator from '../components/ChitWorkingCalculator.svelte';
+import '../styles/global.css';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+		
+		<!-- SEO Meta Tags -->
+		<title>Chit Working & Lifecycle Calculator - Months & Amount Simulation</title>
+		<meta name="description" content="Interactive Chit Fund Working Calculator. Input months and chit value to simulate monthly reverse auctions, dividend payouts, installment savings, and prize money graphs." />
+		<meta name="keywords" content="Chit Working, Chit Calculator, Chit Fund Months Amount, Chit Simulation, Reverse Auction, Dividends, Chit Basics, KSFE, ചിട്ടി കാൽക്കുലേറ്റർ" />
+		
+		<!-- Google Fonts & Material Icons -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&family=Manjari:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+	</head>
+	<body class="bg-background text-on-surface transition-colors duration-500">
+		<ChitWorkingCalculator client:load />
+	</body>
+</html>
+

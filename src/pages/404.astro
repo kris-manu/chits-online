@@ -17,29 +17,38 @@ import '../styles/global.css';
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&family=Manjari:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 	</head>
-	<body class="bg-background text-on-surface transition-colors duration-500 min-h-screen flex items-center justify-center p-4">
-		<main class="max-w-md w-full text-center p-8 rounded-3xl border border-[var(--outline-variant)] bg-[var(--surface)] backdrop-blur-xl shadow-xl">
-			<div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[var(--primary-container)] text-[var(--primary)] mb-6">
+	<body class="bg-background text-on-surface transition-colors duration-500 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+		<!-- Background Glows -->
+		<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+			<div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/15 blur-[120px] animate-pulse-glow"></div>
+			<div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-secondary/20 blur-[120px] animate-pulse-glow animate-float-slow"></div>
+		</div>
+
+		<main class="max-w-md w-full text-center p-8 lg:p-10 rounded-3xl glass-card interactive-card relative z-10 border border-outline-variant/30 shadow-2xl">
+			<div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/15 to-secondary/20 text-secondary mb-6 shadow-inner hover:scale-110 hover:rotate-6 transition-transform">
 				<span class="material-symbols-outlined text-4xl">search_off</span>
 			</div>
 			
-			<h1 class="text-6xl font-bold font-display text-[var(--primary)] mb-2">404</h1>
-			<h2 class="text-xl font-semibold mb-2">Page Not Found / പേജ് കണ്ടെത്താനായില്ല</h2>
-			<p class="text-[var(--on-surface-variant)] text-sm mb-8 leading-relaxed">
-				The page you're looking for doesn't exist or has moved. Please head back to our guide or calculator.
+			<h1 class="text-7xl font-bold font-display gradient-text mb-2 tracking-tight">404</h1>
+			<h2 class="text-xl font-bold mb-2 text-on-surface">Page Not Found / പേജ് കണ്ടെത്താനായില്ല</h2>
+			<p class="text-on-surface-variant text-sm mb-8 leading-relaxed font-medium">
+				The page you're looking for doesn't exist or has moved. Please head back to our chit guide or calculator.
 			</p>
 			
-			<div class="flex flex-col sm:flex-row gap-3 justify-center">
-				<a href="/" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[var(--primary)] text-[var(--on-primary)] font-medium text-sm transition-transform hover:-translate-y-0.5 shadow-md">
-					<span class="material-symbols-outlined text-base">home</span>
+			<div class="flex flex-col sm:flex-row flex-wrap gap-3 justify-center">
+				<a href="/chit-calculator" class="shiny-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-on-primary font-bold text-xs shadow-lg hover:scale-105 active:scale-95 transition-transform group">
+					<span class="material-symbols-outlined text-base group-hover:scale-110 transition-transform">insights</span>
+					<span>Chit Calculator</span>
+				</a>
+				<a href="/" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-primary/40 hover:border-primary hover:bg-primary/10 text-on-surface font-bold text-xs hover:scale-105 active:scale-95 transition-all group">
+					<span class="material-symbols-outlined text-base text-primary group-hover:scale-110 transition-transform">home</span>
 					<span>Chit Basics</span>
 				</a>
-				<a href="/calculator" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[var(--outline-variant)] bg-[var(--surface)] text-[var(--on-surface)] font-medium text-sm transition-transform hover:-translate-y-0.5">
-					<span class="material-symbols-outlined text-base">calculate</span>
-					<span>EMI Calculator</span>
+				<a href="/calculator" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-secondary/40 hover:border-secondary hover:bg-secondary/10 text-on-surface font-bold text-xs hover:scale-105 active:scale-95 transition-all group">
+					<span class="material-symbols-outlined text-base text-secondary group-hover:rotate-12 transition-transform">calculate</span>
+					<span>Loan/Substitution</span>
 				</a>
 			</div>
 		</main>
 	</body>
 </html>
-
