@@ -904,8 +904,11 @@
           >
             <img
               class="w-full h-full object-cover"
-              alt="Advisor headshot"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYrmVflOCEjy-bwFgS9eDr7DJPZcrMYW2JJ2QvTlXn5attjDihW8TPEpNVt-5_UdqgB0uKnX5pMChDgiHW2kj02zO3MIPGQIDOQ-1aF0kFUbs6N7K2CdiuESddxiiygaV6_YaJR8uv3JwRrOhfWBxvnXpK1F9HUDP6UTSJzIxs5XsgMUaLgEsfzKWmPCUMv630N8PRcM0nhiOer0cbTaO5xPrfH4VWmbkjIeHaDacdxJKfiY8WnpyMwJUskpk-4hWej_jg8j8M7w"
+              alt="Financial Advisor"
+              width="34"
+              height="34"
+              loading="lazy"
+              src="/images/advisor_headshot.png"
             />
           </div>
         </div>

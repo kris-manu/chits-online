@@ -1,0 +1,28 @@
+{
+  "name": "chits.online - Chit Fund Guide & Calculators",
+  "short_name": "chits.online",
+  "description": "Bilingual (മലയാളം/English) Chit Fund Guide & KSFE Financial Calculators. Learn how chits work, simulate auctions, and calculate loan EMIs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#008f58",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

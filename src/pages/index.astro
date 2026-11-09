@@ -1,49 +1,113 @@
 ---
 import ChitBasicsPage from "../components/chit/ChitBasicsPage.svelte";
+import { faqItems } from "../data/chitTerms";
 import "../styles/global.css";
+
+const siteUrl = "https://chits.online";
+const canonicalUrl = `${siteUrl}/`;
+const ogImageUrl = `${siteUrl}/images/og-image.png`;
+
+const faqSchema = {
+	"@context": "https://schema.org",
+	"@type": "FAQPage",
+	"mainEntity": faqItems.map((item) => ({
+		"@type": "Question",
+		"name": item.questionEn,
+		"acceptedAnswer": {
+			"@type": "Answer",
+			"text": `${item.answerEn} (മലയാളം: ${item.answerMl})`
+		}
+	}))
+};
+
+const websiteSchema = {
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	"name": "chits.online",
+	"url": siteUrl,
+	"description": "Bilingual educational guide and calculators for Chit Funds and KSFE schemes."
+};
+
+const organizationSchema = {
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	"name": "chits.online",
+	"url": siteUrl,
+	"logo": `${siteUrl}/images/logo.png`,
+	"sameAs": []
+};
 ---
 
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<!-- Favicon & App Icons -->
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="32x32"
-			href="/favicon-32x32.png"
-		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="16x16"
-			href="/favicon-16x16.png"
-		/>
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link
-			rel="apple-touch-icon"
-			sizes="180x180"
-			href="/apple-touch-icon.png"
-		/>
-		<link rel="shortcut icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="generator" content={Astro.generator} />
+		<link rel="canonical" href={canonicalUrl} />
 
-		<!-- SEO Meta Tags -->
-		<title>Chit Fund Guide – Chit Basics, Terms & How Chits Work</title>
+		<!-- Primary SEO Meta Tags -->
+		<title>Chit Fund Guide – Chit Basics, Terms & How Chits Work | chits.online</title>
+		<meta
+			name="title"
+			content="Chit Fund Guide – Chit Basics, Terms & How Chits Work | chits.online"
+		/>
 		<meta
 			name="description"
-			content="Bilingual (മലയാളം/English) educational guide explaining what a chit fund is, how chits work, and essential terms like dividend, discount, prize money, security, and foreman commission."
+			content="Bilingual (മലയാളം/English) educational guide explaining what a chit fund is, how reverse auctions work, and essential terms like dividend, discount, prize money, security, and foreman commission."
 		/>
 		<meta
 			name="keywords"
-			content="Chit Fund, Chitty, Chit Basics, Chit Terms, Dividend, Discount, Prize Money, Foreman Commission, Malayalam, English, KSFE, substitution, ചിട്ടി പദങ്ങൾ"
+			content="Chit Fund, Chitty, Chit Basics, Chit Terms, Dividend, Discount, Prize Money, Foreman Commission, Malayalam, English, KSFE, substitution, ചിട്ടി പദങ്ങൾ, ചിട്ടി കാൽക്കുലേറ്റർ"
 		/>
+		<meta name="author" content="chits.online" />
+		<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
+		<!-- Open Graph / Facebook / WhatsApp -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="chits.online" />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:title" content="Chit Fund Guide – Chit Basics, Terms & How Chits Work | chits.online" />
+		<meta
+			property="og:description"
+			content="Complete bilingual guide to Chit Funds and KSFE schemes. Learn reverse auctions, monthly dividends, installment savings, and essential chit terminology."
+		/>
+		<meta property="og:image" content={ogImageUrl} />
+		<meta property="og:image:secure_url" content={ogImageUrl} />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="chits.online - Kerala Chit Fund & KSFE Lifecycle Guide" />
+		<meta property="og:locale" content="en_IN" />
+		<meta property="og:locale:alternate" content="ml_IN" />
+
+		<!-- Twitter / X -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={canonicalUrl} />
+		<meta name="twitter:title" content="Chit Fund Guide – Chit Basics, Terms & How Chits Work | chits.online" />
+		<meta
+			name="twitter:description"
+			content="Bilingual guide explaining what a chit fund is, how reverse auctions work, and monthly dividend distribution."
+		/>
+		<meta name="twitter:image" content={ogImageUrl} />
+
+		<!-- Mobile & PWA Theme Colors -->
+		<meta name="theme-color" content="#008f58" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#060e1a" media="(prefers-color-scheme: dark)" />
+		<link rel="manifest" href="/site.webmanifest" />
+
+		<!-- Favicon & App Icons -->
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<link rel="shortcut icon" href="/favicon.ico" />
+
+		<!-- Google AdSense -->
 		<script
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8457432011414861"
 			crossorigin="anonymous"></script>
+
 		<!-- Google Fonts & Material Icons -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -51,25 +115,33 @@ import "../styles/global.css";
 			href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&family=Manjari:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
 			rel="stylesheet"
 		/>
+
+		<!-- Google Analytics (gtag.js) -->
 		<script
 			async
 			src="https://www.googletagmanager.com/gtag/js?id=G-0JS4FVR6WF"
-		></script><script>
+		></script>
+		<script>
 			window.dataLayer = window.dataLayer || [];
 			function gtag() {
 				dataLayer.push(arguments);
 			}
 			gtag("js", new Date());
-
 			gtag("config", "G-0JS4FVR6WF");
 		</script>
+
+		<!-- Theme Init (Prevent Flash) -->
 		<script is:inline>
 			if (localStorage.getItem('app-theme') === 'dark') {
 				document.documentElement.classList.add('dark');
 			}
 		</script>
+
+		<!-- Schema.org Structured Data (JSON-LD) -->
+		<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+		<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+		<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 	</head>
-	<!-- Google tag (gtag.js) -->
 
 	<body class="bg-background text-on-surface transition-colors duration-500">
 		<ChitBasicsPage client:load />
