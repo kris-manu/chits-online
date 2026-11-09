@@ -5,7 +5,12 @@ import '../styles/global.css';
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+		<!-- Favicon & App Icons -->
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<link rel="shortcut icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="generator" content={Astro.generator} />
 		
@@ -16,6 +21,11 @@ import '../styles/global.css';
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&family=Manjari:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+		<script is:inline>
+			if (localStorage.getItem('app-theme') === 'dark') {
+				document.documentElement.classList.add('dark');
+			}
+		</script>
 	</head>
 	<body class="bg-background text-on-surface transition-colors duration-500 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
 		<!-- Background Glows -->
@@ -25,8 +35,13 @@ import '../styles/global.css';
 		</div>
 
 		<main class="max-w-md w-full text-center p-8 lg:p-10 rounded-3xl glass-card interactive-card relative z-10 border border-outline-variant/30 shadow-2xl">
-			<div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/15 to-secondary/20 text-secondary mb-6 shadow-inner hover:scale-110 hover:rotate-6 transition-transform">
-				<span class="material-symbols-outlined text-4xl">search_off</span>
+			<a href="/" class="inline-block mb-6 hover:scale-105 transition-transform" title="chits.online">
+				<img src="/images/logo.png" alt="chits.online" class="h-9 w-auto mx-auto object-contain dark:hidden" />
+				<img src="/images/logo-dark.png" alt="chits.online" class="h-9 w-auto mx-auto object-contain hidden dark:block" />
+			</a>
+			
+			<div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/15 to-secondary/20 text-secondary mb-4 shadow-inner hover:scale-110 hover:rotate-6 transition-transform">
+				<span class="material-symbols-outlined text-3xl">search_off</span>
 			</div>
 			
 			<h1 class="text-7xl font-bold font-display gradient-text mb-2 tracking-tight">404</h1>

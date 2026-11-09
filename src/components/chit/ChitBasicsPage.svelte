@@ -150,8 +150,12 @@
     animate();
 
     // Load theme & language preferences
-    const isDark = document.documentElement.classList.contains("dark");
-    theme = isDark ? "dark" : "light";
+    const storedTheme = localStorage.getItem("app-theme");
+    if (storedTheme === "dark") {
+      theme = "dark";
+    } else {
+      theme = "light";
+    }
 
     const storedLang = localStorage.getItem("app-lang");
     if (storedLang === "ml" || storedLang === "en") {
@@ -172,6 +176,7 @@
     } else {
       document.documentElement.classList.remove("dark");
     }
+    localStorage.setItem("app-theme", theme);
   });
 
   // Filtered terms based on search query
@@ -290,22 +295,26 @@
     <header
       class="flex justify-between items-center w-full px-4 lg:px-12 h-18 sticky top-0 z-40 bg-background/55 backdrop-blur-3xl border-b border-outline-variant/30"
     >
-      <div class="flex items-center gap-3">
-        <div
-          class="w-9 h-9 rounded-xl shiny-btn flex items-center justify-center text-on-primary shadow-md hover:scale-105 transition-transform"
-        >
-          <span class="material-symbols-outlined font-bold text-lg"
-            >menu_book</span
-          >
-        </div>
-        <span
-          class="font-headline-md text-base md:text-xl font-bold tracking-tight text-primary"
-        >
-          {language === "ml" ? "ചിട്ടി വിവരങ്ങൾ" : "Chit Basics"}
-        </span>
+      <div class="flex items-center gap-2.5 md:gap-3">
+        <a href="/" class="flex items-center group transition-transform hover:scale-[1.02]" title="chits.online">
+          {#if theme === "dark"}
+            <img
+              src="/images/logo-dark.png"
+              alt="chits.online"
+              class="h-8 md:h-9 w-auto object-contain"
+            />
+          {:else}
+            <img
+              src="/images/logo.png"
+              alt="chits.online"
+              class="h-8 md:h-9 w-auto object-contain"
+            />
+          {/if}
+        </a>
+
         <a
           href="/chit-calculator"
-          class="ml-2 md:ml-4 px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/25 hover:border-primary/50 text-[10px] md:text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm hover:scale-105 active:scale-95 group"
+          class="ml-1 md:ml-3 px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/25 hover:border-primary/50 text-[10px] md:text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm hover:scale-105 active:scale-95 group"
         >
           <span
             class="material-symbols-outlined text-xs md:text-sm font-bold group-hover:rotate-12 transition-transform"
@@ -1928,10 +1937,17 @@
     <footer
       class="mt-auto py-8 border-t border-outline-variant/20 dark:border-white/5 text-center text-outline-variant text-[11px] font-medium leading-relaxed bg-background/20 backdrop-blur-sm relative z-10"
     >
+      <div class="flex items-center justify-center gap-2 mb-3">
+        {#if theme === "dark"}
+          <img src="/images/logo-dark.png" alt="chits.online" class="h-6 w-auto object-contain opacity-90" />
+        {:else}
+          <img src="/images/logo.png" alt="chits.online" class="h-6 w-auto object-contain opacity-90" />
+        {/if}
+      </div>
       <p>
-        © 2026 {language === "ml"
-          ? "സബ്സ്റ്റിറ്റ്യൂഷൻ ചിട്ടി & ലോൺ കാൽക്കുലേറ്റർ ഡാഷ്‌ബോർഡ്"
-          : "Substitution Chitty & Loan Calculator Dashboard"}.
+        © 2026 chits.online — {language === "ml"
+          ? "ചിട്ടി വിവരങ്ങളും കാൽക്കുലേറ്ററും"
+          : "Chit Fund Basics & Financial Calculators"}.
       </p>
       <p class="mt-1 opacity-70">
         {language === "ml"
